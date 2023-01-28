@@ -52,7 +52,7 @@ struct GetUserResponse {
 }
 
 service UserService {
-    UserRegisterResponse Register(1: UserRegisterRequest)
-    UserLoginResponse Login(1: UserLoginRequest)
-    GetUserResponse GetUser(1: UserLoginRequest)
+    UserRegisterResponse Register(1: UserRegisterRequest req)
+    UserLoginResponse Login(1: UserLoginRequest req)
+    GetUserResponse GetUser(1: UserLoginRequest req)
 }

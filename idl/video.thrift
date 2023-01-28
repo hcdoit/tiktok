@@ -1,5 +1,5 @@
 namespace go video
-
+include "user.thrift"
 struct Video {
     1: required i64 id
     2: required user.User author
@@ -45,8 +45,8 @@ struct PublishListResponse {
 }
 
 service VideoService{
-    FeedResponse GetFeed(1: FeedRequest)
-    PublishActionResponse PublishAction(1:PublishActionRequest)
-    PublishListResponse GetPublishList(1:PublishListRequest)
+    FeedResponse GetFeed(1: FeedRequest req)
+    PublishActionResponse PublishAction(1:PublishActionRequest req)
+    PublishListResponse GetPublishList(1:PublishListRequest req)
     
 }

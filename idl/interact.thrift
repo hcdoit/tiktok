@@ -1,4 +1,6 @@
 namespace go interact
+include "video.thrift"
+include "user.thrift"
 
 struct FavoriteActionRequest {
     1: required string token,
@@ -55,8 +57,8 @@ struct CommentListResponse {
 }
 
 service InteractService {
-    FavoriteActionResponse FavoriteAction(1:FavoriteActionRequest)
-    FavoriteListResponse GetFavoriteList(1:FavoriteListRequest)
-    CommentActionResponse CommentAction(1:CommentActionRequest)
-    CommentListResponse GetCommentList(1:CommentListRequest)
+    FavoriteActionResponse FavoriteAction(1:FavoriteActionRequest req)
+    FavoriteListResponse GetFavoriteList(1:FavoriteListRequest req)
+    CommentActionResponse CommentAction(1:CommentActionRequest req)
+    CommentListResponse GetCommentList(1:CommentListRequest req)
 }
