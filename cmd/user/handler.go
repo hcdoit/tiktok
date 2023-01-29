@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/hcdoit/tiktok/cmd/user/pack"
 	"github.com/hcdoit/tiktok/cmd/user/service"
+	"github.com/hcdoit/tiktok/cmd/user/utils"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
 )
@@ -17,22 +17,22 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 	resp = new(user.UserRegisterResponse)
 	//判断参数长度
 	if err = req.IsValid(); err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildStatus(err)
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
 	//注册用户
 	err = service.NewRegisterService(ctx).Register(req)
 	if err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildStatus(err)
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 	}
 	//注册后登录获得uid
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
 	if err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildStatus(err)
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 	}
 	resp.UserId = uid
 	resp.Token = token
-	resp.StatusCode, resp.StatusMsg = pack.BuildStatus(errno.Success)
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
 
 	return resp, nil
 }
@@ -43,17 +43,17 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 	resp = new(user.UserLoginResponse)
 	//判断参数长度
 	if err = req.IsValid(); err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildStatus(err)
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
 	//登录
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
 	if err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildStatus(err)
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 	}
 	resp.UserId = uid
 	resp.Token = token
-	resp.StatusCode, resp.StatusMsg = pack.BuildStatus(errno.Success)
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
 	return resp, nil
 }
 

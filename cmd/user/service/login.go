@@ -5,7 +5,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/hcdoit/tiktok/cmd/user/dal/db"
-	"github.com/hcdoit/tiktok/cmd/user/mw"
+	"github.com/hcdoit/tiktok/cmd/user/utils"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
 	"github.com/hcdoit/tiktok/pkg/jwt"
@@ -43,7 +43,7 @@ func (s *LoginService) Login(req *user.UserLoginRequest) (int64, string, error) 
 	if u.Password != passWord {
 		return 0, "", errno.AuthorizationFailedErr
 	}
-	token, err := mw.Jwt.CreateToken(jwt.CustomClaims{
+	token, err := utils.Jwt.CreateToken(jwt.CustomClaims{
 		Id: int64(u.ID),
 	})
 	if err != nil {

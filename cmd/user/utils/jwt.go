@@ -1,4 +1,4 @@
-package mw
+package utils
 
 import (
 	"github.com/hcdoit/tiktok/pkg/consts"
@@ -9,6 +9,6 @@ var (
 	Jwt *jwt.JWT
 )
 
-func Init() {
+func JwtInit() {
 	Jwt = jwt.NewJWT([]byte(consts.SecretKey))
 }

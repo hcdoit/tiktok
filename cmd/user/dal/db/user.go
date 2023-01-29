@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
+	"github.com/hcdoit/tiktok/pkg/consts"
 
-	"github.com/cloudwego/biz-demo/easy_note/pkg/consts"
 	"gorm.io/gorm"
 )
 
