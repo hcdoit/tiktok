@@ -9,46 +9,46 @@ enum ErrCode {
 }
 
 struct UserRegisterRequest {
-    1: required string username
-    2: required string password
+    1:  string username
+    2:  string password
 }
 
 struct UserRegisterResponse {
-    1: required i32 status_code
-    2: optional string status_msg
-    3: required i64 user_id
-    4: required string token
+    1:  i32 status_code
+    2:  string status_msg
+    3:  i64 user_id
+    4:  string token
 }
 
 struct UserLoginRequest {
-    1: required string username
-    2: required string password
+    1:  string username
+    2:  string password
 }
 
 struct UserLoginResponse {
-    1: required i32 status_code
-    2: optional string status_msg
-    3: required i64 user_id
-    4: required string token
+    1:  i32 status_code
+    2:  string status_msg
+    3:  i64 user_id
+    4:  string token
 }
 
 struct User {
-    1: required i64 id
-    2: required string name
-    3: required i64 follow_count
-    4: required i64 follower_count
-    5: required bool is_follow
+    1:  i64 id
+    2:  string name
+    3:  i64 follow_count
+    4:  i64 follower_count
+    5:  bool is_follow
 }
 
 struct GetUserRequest {
-    1: required i64 user_id
-    2: required string token
+    1:  i64 user_id
+    2:  string token
 }
 
 struct GetUserResponse {
-    1: required i32 status_code
-    2: optional string status_msg
-    3: required User user
+    1:  i32 status_code
+    2:  string status_msg
+    3:  User user
 }
 
 service UserService {
