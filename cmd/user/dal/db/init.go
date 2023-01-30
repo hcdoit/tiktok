@@ -16,14 +16,13 @@
 package db
 
 import (
-	"time"
-
 	"github.com/hcdoit/tiktok/pkg/consts"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/plugin/opentelemetry/logging/logrus"
 	"gorm.io/plugin/opentelemetry/tracing"
+	"time"
 )
 
 var DB *gorm.DB
@@ -51,4 +50,5 @@ func Init() {
 	if err := DB.Use(tracing.NewPlugin()); err != nil {
 		panic(err)
 	}
+
 }

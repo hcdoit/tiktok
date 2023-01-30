@@ -4,7 +4,6 @@ package api
 
 import (
 	"context"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -42,6 +41,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 // Login .
 // @router /douyin/user/login [POST]
 func Login(ctx context.Context, c *app.RequestContext) {
+
 	var err error
 	var req api.UserLoginRequest
 	err = c.BindAndValidate(&req)
@@ -67,7 +67,6 @@ func GetUser(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.GetUserRequest
 	err = c.BindAndValidate(&req)
-	hlog.Info(err)
 	if err != nil {
 		c.JSON(consts.StatusBadRequest, errno.ParamErr)
 		return

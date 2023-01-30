@@ -17,11 +17,12 @@ func NewGetUserService(ctx context.Context) *GetUserService {
 }
 
 func (s *GetUserService) GetUser(req *user.GetUserRequest, myID int64) (*user.User, error) {
+
 	users, err := db.QueryUserByID(s.ctx, myID)
 	if err != nil {
 		return nil, err
 	}
-	if len(users) != 0 {
+	if len(users) != 1 {
 		return nil, errno.ServiceErr
 	}
 	return utils.BuildUser(users[0]), nil

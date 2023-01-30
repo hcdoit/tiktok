@@ -15,6 +15,8 @@
 
 package consts
 
+import "time"
+
 const (
 	NoteTableName       = "note"
 	UserTableName       = "user"
@@ -26,6 +28,11 @@ const (
 	VideoServiceName    = "video"
 	InteractServiceName = "interact"
 	UserServiceName     = "user"
+	RedisAddr           = "localhost:6379"
+	RedisPsw            = "123456"
+	RedosDB             = 0
+	TokenExpireFormat   = time.RFC3339
+	TokenExpireDuration = time.Duration(24 * time.Hour)
 	MySQLDefaultDSN     = "gorm:gorm@tcp(localhost:3306)/gorm?charset=utf8&parseTime=True&loc=Local"
 	TCP                 = "tcp"
 	UserServiceAddr     = ":9000"

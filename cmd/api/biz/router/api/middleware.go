@@ -4,6 +4,7 @@ package Api
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/hcdoit/tiktok/cmd/api/biz/mw"
 )
 
 func rootMw() []app.HandlerFunc {
@@ -18,7 +19,9 @@ func _douyinMw() []app.HandlerFunc {
 
 func _getuserMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
 }
 
 func _userMw() []app.HandlerFunc {

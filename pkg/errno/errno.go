@@ -27,12 +27,13 @@ func (e ErrNo) WithMessage(msg string) ErrNo {
 }
 
 var (
-	Success                = NewErrNo(int32(0), "Success")
-	ServiceErr             = NewErrNo(int32(1), "Service is unable to start successfully")
-	ParamErr               = NewErrNo(int32(2), "Wrong Parameter has been given")
-	UserAlreadyExistErr    = NewErrNo(int32(3), "User already exists")
-	AuthorizationFailedErr = NewErrNo(int32(4), "Authorization failed")
-	ResourceNotFound       = NewErrNo(int32(5), "Resource not found")
+	Success             = NewErrNo(int32(0), "Success")
+	ServiceErr          = NewErrNo(int32(1), "Service is unable to start successfully")
+	ParamErr            = NewErrNo(int32(2), "Wrong Parameter has been given")
+	UserAlreadyExistErr = NewErrNo(int32(3), "User already exists")
+	AuthInvalidJwt      = NewErrNo(int32(4), "Invalid jwt")
+	AuthInvalidAccount  = NewErrNo(int32(4), "username or password wrong")
+	ResourceNotFound    = NewErrNo(int32(6), "Resource not found")
 )
 
 func ConvertErr(err error) ErrNo {

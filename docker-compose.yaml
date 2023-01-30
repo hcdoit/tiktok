@@ -13,6 +13,16 @@ services:
       - MYSQL_PASSWORD=gorm
       - MYSQL_RANDOM_ROOT_PASSWORD="yes"
 
+  redis:
+    image: redis:latest
+    privileged: true
+    command: redis-server /etc/redis/redis.conf --appendonly yes
+    volumes:
+      - ./pkg/configs/redis/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+
+
   # ETCD
   Etcd:
     image: 'bitnami/etcd:latest'

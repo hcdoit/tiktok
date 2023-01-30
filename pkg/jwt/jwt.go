@@ -38,11 +38,11 @@ func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 		return j.SigningKey, nil
 	})
 	if err != nil {
-		return nil, errno.AuthorizationFailedErr
+		return nil, errno.AuthInvalidJwt
 	}
 	// verify the token claims
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
 	}
-	return nil, errno.AuthorizationFailedErr
+	return nil, errno.AuthInvalidJwt
 }

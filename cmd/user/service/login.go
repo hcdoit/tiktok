@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/hcdoit/tiktok/cmd/user/dal/db"
+	"github.com/hcdoit/tiktok/cmd/user/dal/rdb"
 	"github.com/hcdoit/tiktok/cmd/user/utils"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -37,15 +38,19 @@ func (s *LoginService) Login(req *user.UserLoginRequest) (int64, string, error) 
 		return 0, "", err
 	}
 	if len(users) == 0 {
-		return 0, "", errno.AuthorizationFailedErr
+		return 0, "", errno.AuthInvalidAccount
 	}
 	u := users[0]
 	if u.Password != passWord {
-		return 0, "", errno.AuthorizationFailedErr
+		return 0, "", errno.AuthInvalidAccount
 	}
 	token, err := utils.Jwt.CreateToken(jwt.CustomClaims{
 		Id: int64(u.ID),
 	})
+	if err != nil {
+		return 0, "", err
+	}
+	err = rdb.SaveToken(s.ctx, token)
 	if err != nil {
 		return 0, "", err
 	}
