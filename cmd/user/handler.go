@@ -29,6 +29,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
 	}
 	resp.UserId = uid
 	resp.Token = token
@@ -50,6 +51,7 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
 	}
 	resp.UserId = uid
 	resp.Token = token
@@ -58,7 +60,26 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 }
 
 // GetUser implements the UserServiceImpl interface.
-func (s *UserServiceImpl) GetUser(ctx context.Context, req *user.UserLoginRequest) (resp *user.GetUserResponse, err error) {
+func (s *UserServiceImpl) GetUser(ctx context.Context, req *user.GetUserRequest) (resp *user.GetUserResponse, err error) {
 	// TODO: Your code here...
-	return
+	resp = new(user.GetUserResponse)
+	claim, err := utils.Jwt.ParseToken(req.Token)
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+
+	user, err := service.NewGetUserService(ctx).GetUser(req, claim.Id)
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
+	resp.User = user
+
+	return resp, nil
 }

@@ -38,3 +38,10 @@ func (p *UserLoginRequest) IsValid() error {
 	}
 	return nil
 }
+
+func (p *GetUserRequest) IsValid() error {
+	if p.UserId < 0 {
+		return fmt.Errorf("field UserId rule failed, current value: %d", p.UserId)
+	}
+	return nil
+}

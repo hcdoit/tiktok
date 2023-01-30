@@ -3,12 +3,11 @@ package errno
 import (
 	"errors"
 	"fmt"
-	"github.com/hcdoit/tiktok/kitex_gen/user"
 )
 
 type ErrNo struct {
-	ErrCode int32
-	ErrMsg  string
+	ErrCode int32  `json:"status_code"`
+	ErrMsg  string `json:"status_msg"`
 }
 
 func (e ErrNo) Error() string {
@@ -28,11 +27,12 @@ func (e ErrNo) WithMessage(msg string) ErrNo {
 }
 
 var (
-	Success                = NewErrNo(int32(user.ErrCode_SuccessCode), "Success")
-	ServiceErr             = NewErrNo(int32(user.ErrCode_ServiceErrCode), "Service is unable to start successfully")
-	ParamErr               = NewErrNo(int32(user.ErrCode_ParamErrCode), "Wrong Parameter has been given")
-	UserAlreadyExistErr    = NewErrNo(int32(user.ErrCode_UserAlreadyExistErrCode), "User already exists")
-	AuthorizationFailedErr = NewErrNo(int32(user.ErrCode_AuthorizationFailedErrCode), "Authorization failed")
+	Success                = NewErrNo(int32(0), "Success")
+	ServiceErr             = NewErrNo(int32(1), "Service is unable to start successfully")
+	ParamErr               = NewErrNo(int32(2), "Wrong Parameter has been given")
+	UserAlreadyExistErr    = NewErrNo(int32(3), "User already exists")
+	AuthorizationFailedErr = NewErrNo(int32(4), "Authorization failed")
+	ResourceNotFound       = NewErrNo(int32(5), "Resource not found")
 )
 
 func ConvertErr(err error) ErrNo {

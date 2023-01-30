@@ -1,13 +1,5 @@
 namespace go user
 
-enum ErrCode {
-    SuccessCode                = 0
-    ServiceErrCode             = 10001
-    ParamErrCode               = 10002
-    UserAlreadyExistErrCode    = 10003
-    AuthorizationFailedErrCode = 10004
-}
-
 struct UserRegisterRequest {
     1:  string username
     2:  string password
@@ -54,5 +46,5 @@ struct GetUserResponse {
 service UserService {
     UserRegisterResponse Register(1: UserRegisterRequest req)
     UserLoginResponse Login(1: UserLoginRequest req)
-    GetUserResponse GetUser(1: UserLoginRequest req)
+    GetUserResponse GetUser(1: GetUserRequest req)
 }

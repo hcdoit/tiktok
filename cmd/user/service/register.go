@@ -19,7 +19,7 @@ func NewRegisterService(ctx context.Context) *RegisterService {
 }
 
 func (s *RegisterService) Register(req *user.UserRegisterRequest) error {
-	users, err := db.QueryUser(s.ctx, req.Username)
+	users, err := db.QueryUserByName(s.ctx, req.Username)
 	if err != nil {
 		return err
 	}

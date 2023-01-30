@@ -4,69 +4,10 @@ package user
 
 import (
 	"context"
-	"database/sql"
-	"database/sql/driver"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
 	"strings"
 )
-
-type ErrCode int64
-
-const (
-	ErrCode_SuccessCode                ErrCode = 0
-	ErrCode_ServiceErrCode             ErrCode = 10001
-	ErrCode_ParamErrCode               ErrCode = 10002
-	ErrCode_UserAlreadyExistErrCode    ErrCode = 10003
-	ErrCode_AuthorizationFailedErrCode ErrCode = 10004
-)
-
-func (p ErrCode) String() string {
-	switch p {
-	case ErrCode_SuccessCode:
-		return "SuccessCode"
-	case ErrCode_ServiceErrCode:
-		return "ServiceErrCode"
-	case ErrCode_ParamErrCode:
-		return "ParamErrCode"
-	case ErrCode_UserAlreadyExistErrCode:
-		return "UserAlreadyExistErrCode"
-	case ErrCode_AuthorizationFailedErrCode:
-		return "AuthorizationFailedErrCode"
-	}
-	return "<UNSET>"
-}
-
-func ErrCodeFromString(s string) (ErrCode, error) {
-	switch s {
-	case "SuccessCode":
-		return ErrCode_SuccessCode, nil
-	case "ServiceErrCode":
-		return ErrCode_ServiceErrCode, nil
-	case "ParamErrCode":
-		return ErrCode_ParamErrCode, nil
-	case "UserAlreadyExistErrCode":
-		return ErrCode_UserAlreadyExistErrCode, nil
-	case "AuthorizationFailedErrCode":
-		return ErrCode_AuthorizationFailedErrCode, nil
-	}
-	return ErrCode(0), fmt.Errorf("not a valid ErrCode string")
-}
-
-func ErrCodePtr(v ErrCode) *ErrCode { return &v }
-func (p *ErrCode) Scan(value interface{}) (err error) {
-	var result sql.NullInt64
-	err = result.Scan(value)
-	*p = ErrCode(result.Int64)
-	return
-}
-
-func (p *ErrCode) Value() (driver.Value, error) {
-	if p == nil {
-		return nil, nil
-	}
-	return int64(*p), nil
-}
 
 type UserRegisterRequest struct {
 	Username string `thrift:"username,1" frugal:"1,default,string" json:"username"`
@@ -2114,7 +2055,7 @@ type UserService interface {
 
 	Login(ctx context.Context, req *UserLoginRequest) (r *UserLoginResponse, err error)
 
-	GetUser(ctx context.Context, req *UserLoginRequest) (r *GetUserResponse, err error)
+	GetUser(ctx context.Context, req *GetUserRequest) (r *GetUserResponse, err error)
 }
 
 type UserServiceClient struct {
@@ -2161,7 +2102,7 @@ func (p *UserServiceClient) Login(ctx context.Context, req *UserLoginRequest) (r
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *UserServiceClient) GetUser(ctx context.Context, req *UserLoginRequest) (r *GetUserResponse, err error) {
+func (p *UserServiceClient) GetUser(ctx context.Context, req *GetUserRequest) (r *GetUserResponse, err error) {
 	var _args UserServiceGetUserArgs
 	_args.Req = req
 	var _result UserServiceGetUserResult
@@ -3051,7 +2992,7 @@ func (p *UserServiceLoginResult) Field0DeepEqual(src *UserLoginResponse) bool {
 }
 
 type UserServiceGetUserArgs struct {
-	Req *UserLoginRequest `thrift:"req,1" frugal:"1,default,UserLoginRequest" json:"req"`
+	Req *GetUserRequest `thrift:"req,1" frugal:"1,default,GetUserRequest" json:"req"`
 }
 
 func NewUserServiceGetUserArgs() *UserServiceGetUserArgs {
@@ -3062,15 +3003,15 @@ func (p *UserServiceGetUserArgs) InitDefault() {
 	*p = UserServiceGetUserArgs{}
 }
 
-var UserServiceGetUserArgs_Req_DEFAULT *UserLoginRequest
+var UserServiceGetUserArgs_Req_DEFAULT *GetUserRequest
 
-func (p *UserServiceGetUserArgs) GetReq() (v *UserLoginRequest) {
+func (p *UserServiceGetUserArgs) GetReq() (v *GetUserRequest) {
 	if !p.IsSetReq() {
 		return UserServiceGetUserArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *UserServiceGetUserArgs) SetReq(val *UserLoginRequest) {
+func (p *UserServiceGetUserArgs) SetReq(val *GetUserRequest) {
 	p.Req = val
 }
 
@@ -3142,7 +3083,7 @@ ReadStructEndError:
 }
 
 func (p *UserServiceGetUserArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Req = NewUserLoginRequest()
+	p.Req = NewGetUserRequest()
 	if err := p.Req.Read(iprot); err != nil {
 		return err
 	}
@@ -3214,7 +3155,7 @@ func (p *UserServiceGetUserArgs) DeepEqual(ano *UserServiceGetUserArgs) bool {
 	return true
 }
 
-func (p *UserServiceGetUserArgs) Field1DeepEqual(src *UserLoginRequest) bool {
+func (p *UserServiceGetUserArgs) Field1DeepEqual(src *GetUserRequest) bool {
 
 	if !p.Req.DeepEqual(src) {
 		return false

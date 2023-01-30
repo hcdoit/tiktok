@@ -32,7 +32,7 @@ func (s *LoginService) Login(req *user.UserLoginRequest) (int64, string, error) 
 	passWord := fmt.Sprintf("%x", h.Sum(nil))
 
 	userName := req.Username
-	users, err := db.QueryUser(s.ctx, userName)
+	users, err := db.QueryUserByName(s.ctx, userName)
 	if err != nil {
 		return 0, "", err
 	}
