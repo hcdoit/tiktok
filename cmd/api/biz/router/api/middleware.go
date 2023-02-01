@@ -42,7 +42,6 @@ func _publish_ctionMw() []app.HandlerFunc {
 	return []app.HandlerFunc{
 		mw.TokenMiddlewareFunc(),
 	}
-	return nil
 }
 
 func _listMw() []app.HandlerFunc {
@@ -52,7 +51,9 @@ func _listMw() []app.HandlerFunc {
 
 func _getpublishlistMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
 }
 
 func _userMw() []app.HandlerFunc {

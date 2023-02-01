@@ -12,7 +12,7 @@ func Init() {
 	RDB = redis.NewClient(&redis.Options{
 		Addr:     consts.RedisAddr,
 		Password: consts.RedisPsw,
-		DB:       consts.RedosDB,
+		DB:       consts.RedisDB,
 	})
 	ctx := context.Background()
 	_, err := RDB.Ping(ctx).Result()

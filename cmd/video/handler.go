@@ -17,6 +17,10 @@ type VideoServiceImpl struct{}
 func (s *VideoServiceImpl) GetFeed(ctx context.Context, req *video.FeedRequest) (resp *video.FeedResponse, err error) {
 	// TODO: Your code here...
 	resp = new(video.FeedResponse)
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
 	myID := int64(0)
 	if len(req.Token) != 0 {
 		claim, err := jwt.ParseToken(req.Token)
@@ -68,5 +72,23 @@ func (s *VideoServiceImpl) PublishAction(ctx context.Context, req *video.Publish
 // GetPublishList implements the VideoServiceImpl interface.
 func (s *VideoServiceImpl) GetPublishList(ctx context.Context, req *video.PublishListRequest) (resp *video.PublishListResponse, err error) {
 	// TODO: Your code here...
-	return
+	resp = new(video.PublishListResponse)
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	myID := int64(0)
+	if len(req.Token) != 0 {
+		claim, err := jwt.ParseToken(req.Token)
+		if err != nil {
+			resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+			return resp, nil
+		}
+		myID = claim.Id
+	}
+
+	videos, err := service.NewGetPublishListService(ctx).GetPublishList(myID, req.UserId)
+	resp.VideoList = videos
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
+	return resp, nil
 }

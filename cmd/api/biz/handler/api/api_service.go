@@ -156,11 +156,17 @@ func GetPublishList(ctx context.Context, c *app.RequestContext) {
 	var req api.PublishListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		c.JSON(consts.StatusOK, errno.ParamErr)
 		return
 	}
-
-	resp := new(api.PublishListResponse)
+	resp, err := rpc.GetPublishList(ctx, &video.PublishListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
 
 	c.JSON(consts.StatusOK, resp)
 }

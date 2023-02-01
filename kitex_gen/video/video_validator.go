@@ -13,3 +13,17 @@ func (p *PublishActionRequest) IsValid() error {
 	}
 	return nil
 }
+
+func (p *PublishListRequest) IsValid() error {
+	if p.UserId <= 0 {
+		return fmt.Errorf("field UserId rule failed, current value: %d", p.UserId)
+	}
+	return nil
+}
+
+func (p *FeedRequest) IsValid() error {
+	if p.LatestTime < 0 {
+		return fmt.Errorf("field LatestTime rule failed, current value: %d", p.LatestTime)
+	}
+	return nil
+}

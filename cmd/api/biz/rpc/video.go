@@ -49,3 +49,8 @@ func GetFeed(ctx context.Context, req *video.FeedRequest) (*video.FeedResponse, 
 	resp, err := videoClient.GetFeed(ctx, req)
 	return resp, err
 }
+
+func GetPublishList(ctx context.Context, req *video.PublishListRequest) (*video.PublishListResponse, error) {
+	resp, err := videoClient.GetPublishList(ctx, req)
+	return resp, err
+}

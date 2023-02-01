@@ -30,7 +30,7 @@ const (
 	UserServiceName      = "user"
 	RedisAddr            = "localhost:6379"
 	RedisPsw             = "123456"
-	RedosDB              = 0
+	RedisDB              = 0
 	TokenExpireFormat    = time.RFC3339
 	TokenExpireDuration  = time.Duration(24 * time.Hour)
 	MySQLDefaultDSN      = "gorm:gorm@tcp(localhost:3306)/gorm?charset=utf8&parseTime=True&loc=Local"
@@ -39,8 +39,8 @@ const (
 	InteractServiceAddr  = ":7778"
 	VideoServiceAddr     = ":7779"
 	MinioEndpoint        = "localhost:9000"
-	MinioAccessURL       = "192.168.234.19:9000"
-	MinioLocalAccessURL  = "192.168.234.19:9000"
+	MinioAccessURL       = "192.168.0.127:9000"
+	MinioLocalAccessURL  = "localhost:9000"
 	MinioAccessKeyId     = "tiktokMinio"
 	MinioSecretAccessKey = "tiktokMinio"
 	MinioUseSSL          = false
