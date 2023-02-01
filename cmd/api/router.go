@@ -17,9 +17,9 @@ func customizedRegister(r *server.Hertz) {
 
 	// your code ...
 	r.NoRoute(func(ctx context.Context, c *app.RequestContext) {
-		c.JSON(consts.StatusNotFound, errno.ResourceNotFound)
+		c.JSON(consts.StatusOK, errno.ResourceNotFound)
 	})
 	r.NoMethod(func(ctx context.Context, c *app.RequestContext) {
-		c.JSON(consts.StatusInternalServerError, errno.ServiceErr)
+		c.JSON(consts.StatusOK, errno.ResourceNotFound)
 	})
 }

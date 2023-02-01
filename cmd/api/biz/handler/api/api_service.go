@@ -3,15 +3,17 @@
 package api
 
 import (
+	"bytes"
 	"context"
-	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
-	"github.com/hcdoit/tiktok/kitex_gen/user"
-	"github.com/hcdoit/tiktok/pkg/errno"
-	"strconv"
-
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	api "github.com/hcdoit/tiktok/cmd/api/biz/model/api"
+	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
+	"github.com/hcdoit/tiktok/kitex_gen/user"
+	"github.com/hcdoit/tiktok/kitex_gen/video"
+	"github.com/hcdoit/tiktok/pkg/errno"
+	"io"
 )
 
 // Register .
@@ -21,7 +23,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	var req api.UserRegisterRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.JSON(consts.StatusBadRequest, errno.ParamErr)
+		c.JSON(consts.StatusOK, errno.ParamErr)
 		return
 	}
 
@@ -31,7 +33,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	})
 
 	if err != nil {
-		c.JSON(consts.StatusInternalServerError, errno.ServiceErr)
+		c.JSON(consts.StatusOK, errno.ServiceErr)
 		return
 	}
 
@@ -41,20 +43,19 @@ func Register(ctx context.Context, c *app.RequestContext) {
 // Login .
 // @router /douyin/user/login [POST]
 func Login(ctx context.Context, c *app.RequestContext) {
-
 	var err error
 	var req api.UserLoginRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.JSON(consts.StatusBadRequest, errno.ParamErr)
+		c.JSON(consts.StatusOK, errno.ParamErr)
 		return
 	}
 	resp, err := rpc.Login(ctx, &user.UserLoginRequest{
-		Username: c.Query("username"),
-		Password: c.Query("password"),
+		Username: req.Username,
+		Password: req.Password,
 	})
 	if err != nil {
-		c.JSON(consts.StatusInternalServerError, errno.ServiceErr)
+		c.JSON(consts.StatusOK, errno.ServiceErr)
 		return
 	}
 
@@ -68,22 +69,98 @@ func GetUser(ctx context.Context, c *app.RequestContext) {
 	var req api.GetUserRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.JSON(consts.StatusBadRequest, errno.ParamErr)
-		return
-	}
-	userid, err := strconv.Atoi(c.Query("user_id"))
-	if err != nil {
-		c.JSON(consts.StatusBadRequest, errno.ParamErr)
+		c.JSON(consts.StatusOK, errno.ParamErr)
 		return
 	}
 	resp, err := rpc.GetUser(ctx, &user.GetUserRequest{
-		UserId: int64(userid),
-		Token:  c.Query("token"),
+		UserId: req.UserID,
+		Token:  req.Token,
 	})
 	if err != nil {
-		c.JSON(consts.StatusBadRequest, errno.ParamErr)
+		c.JSON(consts.StatusOK, errno.ServiceErr)
 		return
 	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetFeed .
+// @router /douyin/feed [GET]
+func GetFeed(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.FeedRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	resp, err := rpc.GetFeed(ctx, &video.FeedRequest{
+		LatestTime: req.LatestTime,
+		Token:      req.Token,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// PublishAction .
+// @router /douyin/publish/action [POST]
+func PublishAction(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.PublishActionRequest
+	req.Token = c.PostForm("token")
+	req.Title = c.PostForm("title")
+
+	fileHeader, err := c.Request.FormFile("data")
+	if err != nil {
+		hlog.Debug("canot get video data")
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	file, err := fileHeader.Open()
+	if err != nil {
+		hlog.Error("cannot open data")
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+	defer file.Close()
+	buf := bytes.NewBuffer(nil)
+	_, err = io.Copy(buf, file)
+	if err != nil {
+		hlog.Error("cannot copy data")
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+	req.Data = buf.Bytes()
+
+	resp, err := rpc.PublishAction(ctx, &video.PublishActionRequest{
+		Token: req.Token,
+		Data:  req.Data,
+		Title: req.Title,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetPublishList .
+// @router /douyin/publish/list [GET]
+func GetPublishList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.PublishListRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.PublishListResponse)
 
 	c.JSON(consts.StatusOK, resp)
 }

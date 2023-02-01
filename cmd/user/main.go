@@ -5,9 +5,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"github.com/hcdoit/tiktok/cmd/user/dal/db"
-	"github.com/hcdoit/tiktok/cmd/user/dal/rdb"
-	"github.com/hcdoit/tiktok/cmd/user/utils"
+	"github.com/hcdoit/tiktok/cmd/user/dal"
 	"github.com/hcdoit/tiktok/kitex_gen/user/userservice"
 	"github.com/hcdoit/tiktok/pkg/consts"
 	"github.com/hcdoit/tiktok/pkg/mw"
@@ -19,9 +17,7 @@ import (
 )
 
 func Init() {
-	db.Init()
-	rdb.Init()
-	utils.JwtInit()
+	dal.Init()
 	klog.SetLogger(kitexlogrus.NewLogger())
 	klog.SetLevel(klog.LevelInfo)
 }

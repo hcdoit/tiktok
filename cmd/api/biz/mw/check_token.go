@@ -3,6 +3,7 @@ package mw
 import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hcdoit/tiktok/pkg/consts"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -28,11 +29,17 @@ func InitCheckToken() {
 
 func CheckToken(ctx context.Context, token string) (bool, error) {
 	value, err := RDB.Get(ctx, token).Result()
+	if err == redis.Nil {
+		hlog.Debug("no token in redis")
+		return false, err
+	}
 	if err != nil {
+		hlog.Error("redis error")
 		return false, err
 	}
 	expire, err := time.Parse(consts.TokenExpireFormat, value)
 	if err != nil {
+		hlog.Error("parse token expire error")
 		return false, err
 	}
 
@@ -42,9 +49,22 @@ func CheckToken(ctx context.Context, token string) (bool, error) {
 
 func TokenMiddlewareFunc() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		ok, _ := CheckToken(ctx, c.Query("token"))
+		token := c.Query("token")
+		if len(token) == 0 {
+			token = c.PostForm("token")
+		}
+		if len(token) == 0 {
+			hlog.Debug("no token in request")
+			c.JSON(hzconsts.StatusOK, errno.AuthInvalidJwt)
+			c.Abort()
+		}
+
+		ok, err := CheckToken(ctx, token)
 		if !ok {
-			c.JSON(hzconsts.StatusUnauthorized, errno.AuthInvalidJwt)
+			if err == nil {
+				hlog.Debug("token expired")
+			}
+			c.JSON(hzconsts.StatusOK, errno.AuthInvalidJwt)
 			c.Abort()
 		}
 		c.Next(ctx)

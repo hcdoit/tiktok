@@ -17,15 +17,54 @@ func _douyinMw() []app.HandlerFunc {
 	return nil
 }
 
+func _feedMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getfeedMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _publishMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _actionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _publish_ctionMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+	return nil
+}
+
+func _listMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getpublishlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _userMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
 func _getuserMw() []app.HandlerFunc {
 	// your code...
 	return []app.HandlerFunc{
 		mw.TokenMiddlewareFunc(),
 	}
-}
-
-func _userMw() []app.HandlerFunc {
-	// your code...
 	return nil
 }
 
@@ -34,7 +73,17 @@ func _loginMw() []app.HandlerFunc {
 	return nil
 }
 
+func _login0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
 func _registerMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _register0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }

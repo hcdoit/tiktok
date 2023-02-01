@@ -10,6 +10,6 @@ func SaveToken(ctx context.Context, token string) error {
 	key := token
 	expire := time.Now().Add(consts.TokenExpireDuration)
 	value := expire.Format(consts.TokenExpireFormat)
-	err := RDB.Set(context.Background(), key, value, 0).Err()
+	err := RDB.Set(context.Background(), key, value, consts.TokenExpireDuration).Err()
 	return err
 }

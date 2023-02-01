@@ -19,11 +19,32 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	{
 		_douyin := root.Group("/douyin", _douyinMw()...)
-		_douyin.GET("/user", append(_getuserMw(), api.GetUser)...)
+		{
+			_feed := _douyin.Group("/feed", _feedMw()...)
+			_feed.GET("/", append(_getfeedMw(), api.GetFeed)...)
+		}
+		{
+			_publish := _douyin.Group("/publish", _publishMw()...)
+			{
+				_action := _publish.Group("/action", _actionMw()...)
+				_action.POST("/", append(_publish_ctionMw(), api.PublishAction)...)
+			}
+			{
+				_list := _publish.Group("/list", _listMw()...)
+				_list.GET("/", append(_getpublishlistMw(), api.GetPublishList)...)
+			}
+		}
 		{
 			_user := _douyin.Group("/user", _userMw()...)
-			_user.POST("/login", append(_loginMw(), api.Login)...)
-			_user.POST("/register", append(_registerMw(), api.Register)...)
+			_user.GET("/", append(_getuserMw(), api.GetUser)...)
+			{
+				_login := _user.Group("/login", _loginMw()...)
+				_login.POST("/", append(_login0Mw(), api.Login)...)
+			}
+			{
+				_register := _user.Group("/register", _registerMw()...)
+				_register.POST("/", append(_register0Mw(), api.Register)...)
+			}
 		}
 	}
 }

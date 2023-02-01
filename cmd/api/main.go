@@ -17,7 +17,7 @@ func Init() {
 	mw.InitCheckToken()
 	// hlog init
 	hlog.SetLogger(hertzlogrus.NewLogger())
-	hlog.SetLevel(hlog.LevelInfo)
+	hlog.SetLevel(hlog.LevelDebug)
 }
 
 func main() {
@@ -25,6 +25,7 @@ func main() {
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(
 		server.WithHostPorts(":8080"),
+		server.WithMaxRequestBodySize(200*1024*1024),
 		server.WithHandleMethodNotAllowed(true), // coordinate with NoMethod
 		tracer,
 	)

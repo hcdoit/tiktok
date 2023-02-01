@@ -18,27 +18,41 @@ package consts
 import "time"
 
 const (
-	NoteTableName       = "note"
-	UserTableName       = "user"
-	SecretKey           = "secret key"
-	IdentityKey         = "id"
-	Total               = "total"
-	Notes               = "notes"
-	ApiServiceName      = "api"
-	VideoServiceName    = "video"
-	InteractServiceName = "interact"
-	UserServiceName     = "user"
-	RedisAddr           = "localhost:6379"
-	RedisPsw            = "123456"
-	RedosDB             = 0
-	TokenExpireFormat   = time.RFC3339
-	TokenExpireDuration = time.Duration(24 * time.Hour)
-	MySQLDefaultDSN     = "gorm:gorm@tcp(localhost:3306)/gorm?charset=utf8&parseTime=True&loc=Local"
-	TCP                 = "tcp"
-	UserServiceAddr     = ":9000"
-	InteractServiceAddr = ":9500"
-	VideoServiceAddr    = ":10000"
-	ExportEndpoint      = ":4317"
-	ETCDAddress         = "127.0.0.1:2379"
-	DefaultLimit        = 10
+	VideoTableName       = "video"
+	UserTableName        = "user"
+	SecretKey            = "secret key"
+	IdentityKey          = "id"
+	Total                = "total"
+	Notes                = "notes"
+	ApiServiceName       = "api"
+	VideoServiceName     = "video"
+	InteractServiceName  = "interact"
+	UserServiceName      = "user"
+	RedisAddr            = "localhost:6379"
+	RedisPsw             = "123456"
+	RedosDB              = 0
+	TokenExpireFormat    = time.RFC3339
+	TokenExpireDuration  = time.Duration(24 * time.Hour)
+	MySQLDefaultDSN      = "gorm:gorm@tcp(localhost:3306)/gorm?charset=utf8&parseTime=True&loc=Local"
+	TCP                  = "tcp"
+	UserServiceAddr      = ":7777"
+	InteractServiceAddr  = ":7778"
+	VideoServiceAddr     = ":7779"
+	MinioEndpoint        = "localhost:9000"
+	MinioAccessURL       = "192.168.234.19:9000"
+	MinioLocalAccessURL  = "192.168.234.19:9000"
+	MinioAccessKeyId     = "tiktokMinio"
+	MinioSecretAccessKey = "tiktokMinio"
+	MinioUseSSL          = false
+	MinioVideoBucketName = "tiktok-video"
+	MinioPolicy          = "{\"Version\":\"2012-10-17\"," +
+		"\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":" +
+		"{\"AWS\":[\"*\"]},\"Action\":[\"s3:ListBucket\",\"s3:ListBucketMultipartUploads\"," +
+		"\"s3:GetBucketLocation\"],\"Resource\":[\"arn:aws:s3:::" + MinioVideoBucketName +
+		"\"]},{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":[\"*\"]},\"Action\":[\"s3:PutObject\",\"s3:AbortMultipartUpload\",\"s3:DeleteObject\",\"s3:GetObject\",\"s3:ListMultipartUploadParts\"],\"Resource\":[\"arn:aws:s3:::" +
+		MinioVideoBucketName +
+		"/*\"]}]}"
+	ExportEndpoint = ":4317"
+	ETCDAddress    = "127.0.0.1:2379"
+	DefaultLimit   = 10
 )

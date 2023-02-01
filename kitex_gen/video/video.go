@@ -3,6 +3,7 @@
 package video
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
@@ -822,6 +823,7 @@ type FeedResponse struct {
 	StatusCode int32    `thrift:"status_code,1" frugal:"1,default,i32" json:"status_code"`
 	StatusMsg  string   `thrift:"status_msg,2" frugal:"2,default,string" json:"status_msg"`
 	VideoList  []*Video `thrift:"video_list,3" frugal:"3,default,list<Video>" json:"video_list"`
+	NextTime   int64    `thrift:"next_time,4" frugal:"4,default,i64" json:"next_time"`
 }
 
 func NewFeedResponse() *FeedResponse {
@@ -843,6 +845,10 @@ func (p *FeedResponse) GetStatusMsg() (v string) {
 func (p *FeedResponse) GetVideoList() (v []*Video) {
 	return p.VideoList
 }
+
+func (p *FeedResponse) GetNextTime() (v int64) {
+	return p.NextTime
+}
 func (p *FeedResponse) SetStatusCode(val int32) {
 	p.StatusCode = val
 }
@@ -852,11 +858,15 @@ func (p *FeedResponse) SetStatusMsg(val string) {
 func (p *FeedResponse) SetVideoList(val []*Video) {
 	p.VideoList = val
 }
+func (p *FeedResponse) SetNextTime(val int64) {
+	p.NextTime = val
+}
 
 var fieldIDToName_FeedResponse = map[int16]string{
 	1: "status_code",
 	2: "status_msg",
 	3: "video_list",
+	4: "next_time",
 }
 
 func (p *FeedResponse) Read(iprot thrift.TProtocol) (err error) {
@@ -901,6 +911,16 @@ func (p *FeedResponse) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -976,6 +996,15 @@ func (p *FeedResponse) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *FeedResponse) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.NextTime = v
+	}
+	return nil
+}
+
 func (p *FeedResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("FeedResponse"); err != nil {
@@ -992,6 +1021,10 @@ func (p *FeedResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 
@@ -1072,6 +1105,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *FeedResponse) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("next_time", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.NextTime); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
 func (p *FeedResponse) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1092,6 +1142,9 @@ func (p *FeedResponse) DeepEqual(ano *FeedResponse) bool {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.VideoList) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.NextTime) {
 		return false
 	}
 	return true
@@ -1124,10 +1177,17 @@ func (p *FeedResponse) Field3DeepEqual(src []*Video) bool {
 	}
 	return true
 }
+func (p *FeedResponse) Field4DeepEqual(src int64) bool {
+
+	if p.NextTime != src {
+		return false
+	}
+	return true
+}
 
 type PublishActionRequest struct {
 	Token string `thrift:"token,1" frugal:"1,default,string" json:"token"`
-	Data  string `thrift:"data,2" frugal:"2,default,string" json:"data"`
+	Data  []byte `thrift:"data,2" frugal:"2,default,binary" json:"data"`
 	Title string `thrift:"title,3" frugal:"3,default,string" json:"title"`
 }
 
@@ -1143,7 +1203,7 @@ func (p *PublishActionRequest) GetToken() (v string) {
 	return p.Token
 }
 
-func (p *PublishActionRequest) GetData() (v string) {
+func (p *PublishActionRequest) GetData() (v []byte) {
 	return p.Data
 }
 
@@ -1153,7 +1213,7 @@ func (p *PublishActionRequest) GetTitle() (v string) {
 func (p *PublishActionRequest) SetToken(val string) {
 	p.Token = val
 }
-func (p *PublishActionRequest) SetData(val string) {
+func (p *PublishActionRequest) SetData(val []byte) {
 	p.Data = val
 }
 func (p *PublishActionRequest) SetTitle(val string) {
@@ -1255,10 +1315,10 @@ func (p *PublishActionRequest) ReadField1(iprot thrift.TProtocol) error {
 }
 
 func (p *PublishActionRequest) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		p.Data = v
+		p.Data = []byte(v)
 	}
 	return nil
 }
@@ -1330,7 +1390,7 @@ func (p *PublishActionRequest) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("data", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Data); err != nil {
+	if err := oprot.WriteBinary([]byte(p.Data)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1392,9 +1452,9 @@ func (p *PublishActionRequest) Field1DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *PublishActionRequest) Field2DeepEqual(src string) bool {
+func (p *PublishActionRequest) Field2DeepEqual(src []byte) bool {
 
-	if strings.Compare(p.Data, src) != 0 {
+	if bytes.Compare(p.Data, src) != 0 {
 		return false
 	}
 	return true

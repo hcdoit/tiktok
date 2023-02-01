@@ -23,6 +23,7 @@ func (s *RegisterService) Register(req *user.UserRegisterRequest) error {
 	if err != nil {
 		return err
 	}
+
 	if len(users) != 0 {
 		return errno.UserAlreadyExistErr
 	}

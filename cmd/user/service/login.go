@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/hcdoit/tiktok/cmd/user/dal/db"
 	"github.com/hcdoit/tiktok/cmd/user/dal/rdb"
-	"github.com/hcdoit/tiktok/cmd/user/utils"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
 	"github.com/hcdoit/tiktok/pkg/jwt"
@@ -44,7 +43,7 @@ func (s *LoginService) Login(req *user.UserLoginRequest) (int64, string, error) 
 	if u.Password != passWord {
 		return 0, "", errno.AuthInvalidAccount
 	}
-	token, err := utils.Jwt.CreateToken(jwt.CustomClaims{
+	token, err := jwt.CreateToken(jwt.CustomClaims{
 		Id: int64(u.ID),
 	})
 	if err != nil {

@@ -6,6 +6,7 @@ import (
 	"github.com/hcdoit/tiktok/cmd/user/utils"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
+	"github.com/hcdoit/tiktok/pkg/jwt"
 )
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -24,6 +25,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 	err = service.NewRegisterService(ctx).Register(req)
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
 	}
 	//注册后登录获得uid
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
@@ -63,18 +65,22 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 func (s *UserServiceImpl) GetUser(ctx context.Context, req *user.GetUserRequest) (resp *user.GetUserResponse, err error) {
 	// TODO: Your code here...
 	resp = new(user.GetUserResponse)
-	claim, err := utils.Jwt.ParseToken(req.Token)
-	if err != nil {
-		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
-		return resp, nil
-	}
-	if err = req.IsValid(); err != nil {
-		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
-		return resp, nil
+	myID := int64(0)
+	if len(req.Token) != 0 {
+		claim, err := jwt.ParseToken(req.Token)
+		if err != nil {
+			resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+			return resp, nil
+		}
+		myID = claim.Id
 	}
 
-	user, err := service.NewGetUserService(ctx).GetUser(req, claim.Id)
 	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	user, err := service.NewGetUserService(ctx).GetUser(req, myID)
+	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}

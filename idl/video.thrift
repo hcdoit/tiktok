@@ -20,11 +20,12 @@ struct FeedResponse {
     1:  i32 status_code
     2:  string status_msg
     3:  list<Video> video_list
+    4:  i64 next_time
 }
 
 struct PublishActionRequest {
     1:  string token
-    2:  string data
+    2:  binary data
     3:  string title
 }
 
