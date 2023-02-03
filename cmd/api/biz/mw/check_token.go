@@ -50,6 +50,7 @@ func CheckToken(ctx context.Context, token string) (bool, error) {
 func TokenMiddlewareFunc() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		token := c.Query("token")
+		hlog.Debug(c.FullPath())
 		if len(token) == 0 {
 			token = c.PostForm("token")
 		}

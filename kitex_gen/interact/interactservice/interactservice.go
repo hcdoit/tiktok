@@ -19,10 +19,11 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "InteractService"
 	handlerType := (*interact.InteractService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"FavoriteAction":  kitex.NewMethodInfo(favoriteActionHandler, newInteractServiceFavoriteActionArgs, newInteractServiceFavoriteActionResult, false),
-		"GetFavoriteList": kitex.NewMethodInfo(getFavoriteListHandler, newInteractServiceGetFavoriteListArgs, newInteractServiceGetFavoriteListResult, false),
-		"CommentAction":   kitex.NewMethodInfo(commentActionHandler, newInteractServiceCommentActionArgs, newInteractServiceCommentActionResult, false),
-		"GetCommentList":  kitex.NewMethodInfo(getCommentListHandler, newInteractServiceGetCommentListArgs, newInteractServiceGetCommentListResult, false),
+		"FavoriteAction":   kitex.NewMethodInfo(favoriteActionHandler, newInteractServiceFavoriteActionArgs, newInteractServiceFavoriteActionResult, false),
+		"GetFavoriteList":  kitex.NewMethodInfo(getFavoriteListHandler, newInteractServiceGetFavoriteListArgs, newInteractServiceGetFavoriteListResult, false),
+		"CommentAction":    kitex.NewMethodInfo(commentActionHandler, newInteractServiceCommentActionArgs, newInteractServiceCommentActionResult, false),
+		"GetCommentList":   kitex.NewMethodInfo(getCommentListHandler, newInteractServiceGetCommentListArgs, newInteractServiceGetCommentListResult, false),
+		"GetVideoInteract": kitex.NewMethodInfo(getVideoInteractHandler, newInteractServiceGetVideoInteractArgs, newInteractServiceGetVideoInteractResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "interact",
@@ -110,6 +111,24 @@ func newInteractServiceGetCommentListResult() interface{} {
 	return interact.NewInteractServiceGetCommentListResult()
 }
 
+func getVideoInteractHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*interact.InteractServiceGetVideoInteractArgs)
+	realResult := result.(*interact.InteractServiceGetVideoInteractResult)
+	success, err := handler.(interact.InteractService).GetVideoInteract(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newInteractServiceGetVideoInteractArgs() interface{} {
+	return interact.NewInteractServiceGetVideoInteractArgs()
+}
+
+func newInteractServiceGetVideoInteractResult() interface{} {
+	return interact.NewInteractServiceGetVideoInteractResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -155,6 +174,16 @@ func (p *kClient) GetCommentList(ctx context.Context, req *interact.CommentListR
 	_args.Req = req
 	var _result interact.InteractServiceGetCommentListResult
 	if err = p.c.Call(ctx, "GetCommentList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetVideoInteract(ctx context.Context, req *interact.VideoInteractRequest) (r *interact.VideoInteractResponse, err error) {
+	var _args interact.InteractServiceGetVideoInteractArgs
+	_args.Req = req
+	var _result interact.InteractServiceGetVideoInteractResult
+	if err = p.c.Call(ctx, "GetVideoInteract", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

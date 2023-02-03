@@ -10,16 +10,25 @@ import (
 	"time"
 )
 
-type PublishActionService struct {
+type PublishService struct {
 	ctx context.Context
 }
 
-// NewPublishActionService new PublishActionService
-func NewPublishActionService(ctx context.Context) *PublishActionService {
-	return &PublishActionService{ctx: ctx}
+func NewPublishService(ctx context.Context) *PublishService {
+	return &PublishService{ctx: ctx}
 }
 
-func (s *PublishActionService) PublishAction(req *video.PublishActionRequest, authorID int64) error {
+func (s *PublishService) GetPublishList(myID int64, ID int64) ([]*video.Video, error) {
+	modelVideos, err := db.QueryVideoByAuthorID(s.ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+	if len(modelVideos) == 0 {
+		return nil, nil
+	}
+	return utils.BuildVideos(modelVideos, s.ctx, myID), nil
+}
+func (s *PublishService) PublishAction(req *video.PublishActionRequest, authorID int64) error {
 
 	publishTime := time.Now().Unix()
 	videoName := fmt.Sprintf("%d_%d.mp4", authorID, publishTime)

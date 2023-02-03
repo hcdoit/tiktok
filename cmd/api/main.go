@@ -5,11 +5,14 @@ package main
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/hcdoit/tiktok/cmd/api/biz/mw"
 	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
+	"github.com/hcdoit/tiktok/pkg/consts"
 	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/hertz-contrib/pprof"
+	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 )
 
 func Init() {
@@ -17,7 +20,9 @@ func Init() {
 	mw.InitCheckToken()
 	// hlog init
 	hlog.SetLogger(hertzlogrus.NewLogger())
-	hlog.SetLevel(hlog.LevelDebug)
+	hlog.SetLevel(consts.HLoggerLevel)
+	klog.SetLogger(kitexlogrus.NewLogger())
+	klog.SetLevel(consts.KLoggerLevel)
 }
 
 func main() {

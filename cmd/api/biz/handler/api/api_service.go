@@ -10,6 +10,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	api "github.com/hcdoit/tiktok/cmd/api/biz/model/api"
 	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
+	"github.com/hcdoit/tiktok/kitex_gen/interact"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/kitex_gen/video"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -162,6 +163,98 @@ func GetPublishList(ctx context.Context, c *app.RequestContext) {
 	resp, err := rpc.GetPublishList(ctx, &video.PublishListRequest{
 		UserId: req.UserID,
 		Token:  req.Token,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// FavoriteAction .
+// @router /douyin/favorite/action/ [POST]
+func FavoriteAction(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.FavoriteActionRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	resp, err := rpc.FavoriteAction(ctx, &interact.FavoriteActionRequest{
+		Token:      req.Token,
+		VideoId:    req.VideoID,
+		ActionType: req.ActionType,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetFavoriteList .
+// @router /douyin/favorite/list/ [GET]
+func GetFavoriteList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.FavoriteListRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	resp, err := rpc.GetFavoriteList(ctx, &interact.FavoriteListRequest{
+		Token:  req.Token,
+		UserId: req.UserID,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// CommentAction .
+// @router /douyin/comment/action/ [POST]
+func CommentAction(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.CommentActionRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	resp, err := rpc.CommentAction(ctx, &interact.CommentActionRequest{
+		Token:       req.Token,
+		VideoId:     req.VideoID,
+		ActionType:  req.ActionType,
+		CommentText: req.CommentText,
+		CommentId:   req.CommentID,
+	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetCommentList .
+// @router /douyin/comment/list/ [GET]
+func GetCommentList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.CommentListRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	resp, err := rpc.GetCommentList(ctx, &interact.CommentListRequest{
+		Token:   req.Token,
+		VideoId: req.VideoID,
 	})
 	if err != nil {
 		c.JSON(consts.StatusOK, errno.ServiceErr)

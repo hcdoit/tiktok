@@ -19,7 +19,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 	//判断参数长度
 	if err = req.IsValid(); err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
-		return resp, nil
+		return resp, err
 	}
 	//注册用户
 	err = service.NewRegisterService(ctx).Register(req)

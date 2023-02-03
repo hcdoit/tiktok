@@ -45,9 +45,20 @@ struct PublishListResponse {
     3:  list<Video> video_list
 }
 
+struct VideoRequest{
+    1:  i64 user_id
+    2:  i64 video_id
+}
+
+struct VideoResponse{
+    1:  i32 status_code
+    2:  string status_msg
+    3:  Video video
+}
+
 service VideoService{
     FeedResponse GetFeed(1: FeedRequest req)
     PublishActionResponse PublishAction(1:PublishActionRequest req)
     PublishListResponse GetPublishList(1:PublishListRequest req)
-    
+    VideoResponse GetVideo(1:VideoRequest req)
 }

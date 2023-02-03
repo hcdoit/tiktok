@@ -3,11 +3,24 @@
 package Api
 
 import (
+	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hcdoit/tiktok/cmd/api/biz/mw"
+	"github.com/hertz-contrib/requestid"
+	"go.opentelemetry.io/otel/trace"
 )
 
 func rootMw() []app.HandlerFunc {
+	return []app.HandlerFunc{
+
+		// use requestid mw
+		requestid.New(
+			requestid.WithGenerator(func(ctx context.Context, c *app.RequestContext) string {
+				traceID := trace.SpanFromContext(ctx).SpanContext().TraceID().String()
+				return traceID
+			}),
+		),
+	}
 	// your code...
 	return nil
 }
@@ -15,6 +28,62 @@ func rootMw() []app.HandlerFunc {
 func _douyinMw() []app.HandlerFunc {
 	// your code...
 	return nil
+}
+
+func _commentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _actionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _comment_ctionMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+}
+
+func _listMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getcommentlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _favoriteMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _action0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _favorite_ctionMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+}
+
+func _list0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getfavoritelistMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
 }
 
 func _feedMw() []app.HandlerFunc {
@@ -32,7 +101,7 @@ func _publishMw() []app.HandlerFunc {
 	return nil
 }
 
-func _actionMw() []app.HandlerFunc {
+func _action1Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
@@ -44,7 +113,7 @@ func _publish_ctionMw() []app.HandlerFunc {
 	}
 }
 
-func _listMw() []app.HandlerFunc {
+func _list1Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
@@ -63,9 +132,6 @@ func _userMw() []app.HandlerFunc {
 
 func _getuserMw() []app.HandlerFunc {
 	// your code...
-	return []app.HandlerFunc{
-		mw.TokenMiddlewareFunc(),
-	}
 	return nil
 }
 

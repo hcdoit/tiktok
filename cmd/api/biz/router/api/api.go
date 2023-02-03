@@ -4,7 +4,7 @@ package Api
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	api "github.com/hcdoit/tiktok/cmd/api/biz/handler/api"
+	"github.com/hcdoit/tiktok/cmd/api/biz/handler/api"
 )
 
 /*
@@ -20,18 +20,40 @@ func Register(r *server.Hertz) {
 	{
 		_douyin := root.Group("/douyin", _douyinMw()...)
 		{
+			_comment := _douyin.Group("/comment", _commentMw()...)
+			{
+				_action := _comment.Group("/action", _actionMw()...)
+				_action.POST("/", append(_comment_ctionMw(), api.CommentAction)...)
+			}
+			{
+				_list := _comment.Group("/list", _listMw()...)
+				_list.GET("/", append(_getcommentlistMw(), api.GetCommentList)...)
+			}
+		}
+		{
+			_favorite := _douyin.Group("/favorite", _favoriteMw()...)
+			{
+				_action0 := _favorite.Group("/action", _action0Mw()...)
+				_action0.POST("/", append(_favorite_ctionMw(), api.FavoriteAction)...)
+			}
+			{
+				_list0 := _favorite.Group("/list", _list0Mw()...)
+				_list0.GET("/", append(_getfavoritelistMw(), api.GetFavoriteList)...)
+			}
+		}
+		{
 			_feed := _douyin.Group("/feed", _feedMw()...)
 			_feed.GET("/", append(_getfeedMw(), api.GetFeed)...)
 		}
 		{
 			_publish := _douyin.Group("/publish", _publishMw()...)
 			{
-				_action := _publish.Group("/action", _actionMw()...)
-				_action.POST("/", append(_publish_ctionMw(), api.PublishAction)...)
+				_action1 := _publish.Group("/action", _action1Mw()...)
+				_action1.POST("/", append(_publish_ctionMw(), api.PublishAction)...)
 			}
 			{
-				_list := _publish.Group("/list", _listMw()...)
-				_list.GET("/", append(_getpublishlistMw(), api.GetPublishList)...)
+				_list1 := _publish.Group("/list", _list1Mw()...)
+				_list1.GET("/", append(_getpublishlistMw(), api.GetPublishList)...)
 			}
 		}
 		{

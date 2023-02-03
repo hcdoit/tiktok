@@ -27,3 +27,10 @@ func (p *FeedRequest) IsValid() error {
 	}
 	return nil
 }
+
+func (p *VideoRequest) IsValid() error {
+	if p.VideoId < 0 {
+		return fmt.Errorf("field VideoId rule failed, current value: %d", p.VideoId)
+	}
+	return nil
+}

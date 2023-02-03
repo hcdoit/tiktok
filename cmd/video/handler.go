@@ -13,6 +13,24 @@ import (
 // VideoServiceImpl implements the last service interface defined in the IDL.
 type VideoServiceImpl struct{}
 
+func (s *VideoServiceImpl) GetVideo(ctx context.Context, req *video.VideoRequest) (resp *video.VideoResponse, err error) {
+	// TODO: Your code here...
+	resp = new(video.VideoResponse)
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	getVideo, err := service.NewGetVideoService(ctx).GetVideo(req)
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
+	resp.Video = getVideo
+
+	return resp, nil
+}
+
 // GetFeed implements the VideoServiceImpl interface.
 func (s *VideoServiceImpl) GetFeed(ctx context.Context, req *video.FeedRequest) (resp *video.FeedResponse, err error) {
 	// TODO: Your code here...
@@ -60,7 +78,7 @@ func (s *VideoServiceImpl) PublishAction(ctx context.Context, req *video.Publish
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
-	err = service.NewPublishActionService(ctx).PublishAction(req, int64(claim.Id))
+	err = service.NewPublishService(ctx).PublishAction(req, claim.Id)
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
@@ -87,7 +105,7 @@ func (s *VideoServiceImpl) GetPublishList(ctx context.Context, req *video.Publis
 		myID = claim.Id
 	}
 
-	videos, err := service.NewGetPublishListService(ctx).GetPublishList(myID, req.UserId)
+	videos, err := service.NewPublishService(ctx).GetPublishList(myID, req.UserId)
 	resp.VideoList = videos
 	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
 	return resp, nil

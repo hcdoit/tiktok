@@ -6,6 +6,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/hcdoit/tiktok/cmd/video/dal/db"
 	"github.com/hcdoit/tiktok/cmd/video/rpc"
+	"github.com/hcdoit/tiktok/kitex_gen/interact"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/kitex_gen/video"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -27,14 +28,30 @@ func BuildVideo(v *db.Video, ctx context.Context, myID int64) (*video.Video, err
 	if v == nil {
 		return nil, nil
 	}
-	resp, err := rpc.GetUser(ctx, &user.GetUserRequest{
+	author, err := rpc.GetUser(ctx, &user.GetUserRequest{
 		UserId: v.AuthorID,
 		Token:  "",
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &video.Video{Id: int64(v.ID), Author: resp, PlayUrl: v.PlayURL, CoverUrl: v.CoverURL, Title: v.Title}, nil
+	info, err := rpc.GetInteract(ctx, &interact.VideoInteractRequest{
+		UserId:  myID,
+		VideoId: int64(v.ID),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &video.Video{
+		Id:            int64(v.ID),
+		Author:        author,
+		PlayUrl:       v.PlayURL,
+		CoverUrl:      v.CoverURL,
+		Title:         v.Title,
+		CommentCount:  info.CommentCount,
+		FavoriteCount: info.FavoriteCount,
+		IsFavorite:    info.IsFavorite,
+	}, nil
 }
 
 func BuildVideos(vs []*db.Video, ctx context.Context, myID int64) []*video.Video {

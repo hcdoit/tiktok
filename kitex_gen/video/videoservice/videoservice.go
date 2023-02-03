@@ -22,6 +22,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"GetFeed":        kitex.NewMethodInfo(getFeedHandler, newVideoServiceGetFeedArgs, newVideoServiceGetFeedResult, false),
 		"PublishAction":  kitex.NewMethodInfo(publishActionHandler, newVideoServicePublishActionArgs, newVideoServicePublishActionResult, false),
 		"GetPublishList": kitex.NewMethodInfo(getPublishListHandler, newVideoServiceGetPublishListArgs, newVideoServiceGetPublishListResult, false),
+		"GetVideo":       kitex.NewMethodInfo(getVideoHandler, newVideoServiceGetVideoArgs, newVideoServiceGetVideoResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "video",
@@ -91,6 +92,24 @@ func newVideoServiceGetPublishListResult() interface{} {
 	return video.NewVideoServiceGetPublishListResult()
 }
 
+func getVideoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*video.VideoServiceGetVideoArgs)
+	realResult := result.(*video.VideoServiceGetVideoResult)
+	success, err := handler.(video.VideoService).GetVideo(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newVideoServiceGetVideoArgs() interface{} {
+	return video.NewVideoServiceGetVideoArgs()
+}
+
+func newVideoServiceGetVideoResult() interface{} {
+	return video.NewVideoServiceGetVideoResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -126,6 +145,16 @@ func (p *kClient) GetPublishList(ctx context.Context, req *video.PublishListRequ
 	_args.Req = req
 	var _result video.VideoServiceGetPublishListResult
 	if err = p.c.Call(ctx, "GetPublishList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetVideo(ctx context.Context, req *video.VideoRequest) (r *video.VideoResponse, err error) {
+	var _args video.VideoServiceGetVideoArgs
+	_args.Req = req
+	var _result video.VideoServiceGetVideoResult
+	if err = p.c.Call(ctx, "GetVideo", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

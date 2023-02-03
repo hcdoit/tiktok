@@ -15,6 +15,7 @@ type Client interface {
 	GetFavoriteList(ctx context.Context, req *interact.FavoriteListRequest, callOptions ...callopt.Option) (r *interact.FavoriteListResponse, err error)
 	CommentAction(ctx context.Context, req *interact.CommentActionRequest, callOptions ...callopt.Option) (r *interact.CommentActionResponse, err error)
 	GetCommentList(ctx context.Context, req *interact.CommentListRequest, callOptions ...callopt.Option) (r *interact.CommentListResponse, err error)
+	GetVideoInteract(ctx context.Context, req *interact.VideoInteractRequest, callOptions ...callopt.Option) (r *interact.VideoInteractResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -64,4 +65,9 @@ func (p *kInteractServiceClient) CommentAction(ctx context.Context, req *interac
 func (p *kInteractServiceClient) GetCommentList(ctx context.Context, req *interact.CommentListRequest, callOptions ...callopt.Option) (r *interact.CommentListResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetCommentList(ctx, req)
+}
+
+func (p *kInteractServiceClient) GetVideoInteract(ctx context.Context, req *interact.VideoInteractRequest, callOptions ...callopt.Option) (r *interact.VideoInteractResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetVideoInteract(ctx, req)
 }

@@ -10,13 +10,14 @@ require (
 	github.com/hertz-contrib/obs-opentelemetry/logging/logrus v0.1.1
 	github.com/hertz-contrib/obs-opentelemetry/tracing v0.1.1
 	github.com/hertz-contrib/pprof v0.1.0
+	github.com/hertz-contrib/requestid v1.1.0
 	github.com/kitex-contrib/obs-opentelemetry v0.1.0
 	github.com/kitex-contrib/obs-opentelemetry/logging/logrus v0.0.0-20221109071748-a433b0b57972
 	github.com/kitex-contrib/registry-etcd v0.0.0-20221223084757-0d49e7162359
 	github.com/minio/minio-go/v7 v7.0.47
-	github.com/nareix/joy4 v0.0.0-20200507095837-05a4ffbb5369
 	github.com/redis/go-redis/v9 v9.0.1
 	github.com/u2takey/ffmpeg-go v0.4.1
+	go.opentelemetry.io/otel/trace v1.10.0
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.3
 	gorm.io/plugin/opentelemetry v0.1.0
@@ -89,7 +90,6 @@ require (
 	go.opentelemetry.io/otel/metric v0.32.1 // indirect
 	go.opentelemetry.io/otel/sdk v1.9.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v0.31.0 // indirect
-	go.opentelemetry.io/otel/trace v1.10.0 // indirect
 	go.opentelemetry.io/proto/otlp v0.18.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect

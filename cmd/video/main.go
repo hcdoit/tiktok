@@ -21,7 +21,7 @@ func Init() {
 	dal.Init()
 	rpc.Init()
 	klog.SetLogger(kitexlogrus.NewLogger())
-	klog.SetLevel(klog.LevelInfo)
+	klog.SetLevel(consts.KLoggerLevel)
 }
 
 func main() {

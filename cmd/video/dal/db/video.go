@@ -24,6 +24,14 @@ func CreateVideo(ctx context.Context, videos []*Video) error {
 	return DB.WithContext(ctx).Create(videos).Error
 }
 
+func QueryVideoByID(ctx context.Context, videoID int64) ([]*Video, error) {
+	res := make([]*Video, 0)
+	if err := DB.WithContext(ctx).Where("id = ?", videoID).Find(&res).Error; err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
 func QueryVideoByAuthorID(ctx context.Context, authorID int64) ([]*Video, error) {
 	res := make([]*Video, 0)
 	if err := DB.WithContext(ctx).Where("author_id = ?", authorID).Find(&res).Error; err != nil {
