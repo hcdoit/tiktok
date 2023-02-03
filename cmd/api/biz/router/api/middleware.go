@@ -21,7 +21,6 @@ func rootMw() []app.HandlerFunc {
 			}),
 		),
 	}
-	// your code...
 	return nil
 }
 
@@ -54,6 +53,83 @@ func _listMw() []app.HandlerFunc {
 
 func _getcommentlistMw() []app.HandlerFunc {
 	// your code...
+	return nil
+}
+
+func _relatioinMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _followMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _list2Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getfollowlistMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+	return nil
+}
+
+func _relationMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _action2Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _relation_ctionMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+	return nil
+}
+
+func _followerMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _list3Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getfollowerlistMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+	return nil
+}
+
+func _friendMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _list4Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getfriendlistMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
 	return nil
 }
 

@@ -1,8 +1,11 @@
 package utils
 
 import (
+	"context"
 	"errors"
 	"github.com/hcdoit/tiktok/cmd/user/dal/db"
+	"github.com/hcdoit/tiktok/cmd/user/rpc"
+	"github.com/hcdoit/tiktok/kitex_gen/social"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
 )
@@ -20,10 +23,18 @@ func BuildStatus(err error) (int32, string) {
 }
 
 // User pack user info
-func BuildUser(u *db.User) *user.User {
-	if u == nil {
-		return nil
+func BuildUser(u *db.User, myID int64, ctx context.Context) *user.User {
+	buildUser := &user.User{Id: int64(u.ID), Name: u.Username}
+	relationInfo, err := rpc.GetRelationInfo(ctx, &social.RelationInfoRequest{
+		UserId: int64(u.ID),
+		MyId:   myID,
+	})
+	if err == nil {
+		buildUser.FollowCount, buildUser.FollowerCount, buildUser.IsFollow = relationInfo.FollowCount, relationInfo.FollowerCount, relationInfo.IsFollow
+	}
+	if buildUser.Id == myID {
+		buildUser.IsFollow = true
 	}
 
-	return &user.User{Id: int64(u.ID), Name: u.Username}
+	return buildUser
 }

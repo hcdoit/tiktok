@@ -5,9 +5,9 @@ import (
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"github.com/hcdoit/tiktok/cmd/user/dal"
-	"github.com/hcdoit/tiktok/cmd/user/rpc"
-	"github.com/hcdoit/tiktok/kitex_gen/user/userservice"
+	"github.com/hcdoit/tiktok/cmd/social/dal"
+	"github.com/hcdoit/tiktok/cmd/social/rpc"
+	"github.com/hcdoit/tiktok/kitex_gen/social/socialservice"
 	"github.com/hcdoit/tiktok/pkg/consts"
 	"github.com/hcdoit/tiktok/pkg/mw"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
@@ -29,17 +29,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	addr, err := net.ResolveTCPAddr(consts.TCP, consts.UserServiceAddr)
+	addr, err := net.ResolveTCPAddr(consts.TCP, consts.SocialServiceAddr)
 	if err != nil {
 		panic(err)
 	}
 	Init()
 	provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(consts.UserServiceName),
+		provider.WithServiceName(consts.SocialServiceName),
 		provider.WithExportEndpoint(consts.ExportEndpoint),
 		provider.WithInsecure(),
 	)
-	svr := userservice.NewServer(new(UserServiceImpl),
+	svr := socialservice.NewServer(new(SocialServiceImpl),
 		server.WithServiceAddr(addr),
 		server.WithRegistry(r),
 		server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}),
@@ -47,7 +47,7 @@ func main() {
 		server.WithMiddleware(mw.CommonMiddleware),
 		server.WithMiddleware(mw.ServerMiddleware),
 		server.WithSuite(tracing.NewServerSuite()),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: consts.UserServiceName}),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: consts.SocialServiceName}),
 	)
 	err = svr.Run()
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"github.com/hcdoit/tiktok/kitex_gen/interact"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
+	"github.com/hcdoit/tiktok/pkg/jwt"
 )
 
 func BuildStatus(err error) (int32, string) {
@@ -26,9 +27,15 @@ func BuildComment(c *db.Comment, ctx context.Context, myID int64) (*interact.Com
 	if c == nil {
 		return nil, nil
 	}
+	token, err := jwt.CreateToken(jwt.CustomClaims{
+		Id: int64(myID),
+	})
+	if err != nil {
+		return nil, err
+	}
 	user, err := rpc.GetUser(ctx, &user.GetUserRequest{
 		UserId: c.UserID,
-		Token:  "",
+		Token:  token,
 	})
 	if err != nil {
 		return nil, err

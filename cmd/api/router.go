@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	handler "github.com/hcdoit/tiktok/cmd/api/biz/handler"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -17,9 +18,12 @@ func customizedRegister(r *server.Hertz) {
 
 	// your code ...
 	r.NoRoute(func(ctx context.Context, c *app.RequestContext) {
+		hlog.Info("no route")
+		hlog.Info(c.Keys)
 		c.JSON(consts.StatusOK, errno.ResourceNotFound)
 	})
 	r.NoMethod(func(ctx context.Context, c *app.RequestContext) {
+		hlog.Info("no method")
 		c.JSON(consts.StatusOK, errno.ResourceNotFound)
 	})
 }

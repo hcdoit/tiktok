@@ -140,6 +140,41 @@ struct CommentListResponse {
     3:  list<Comment> comment_list
 }
 
+struct RelationActionRequest{
+    1: string token
+    2: i64 to_user_id
+    3: i32 action_type
+}
+
+struct RelationActionResponse{
+    1: i32 status_code
+    2: string status_msg
+}
+
+struct RelationListRequest{
+    1: string token
+    2: i64 user_id
+}
+
+struct RelationListResponse{
+    1: i32 status_code
+    2: string status_msg
+    3: list<User> user_list
+}
+
+struct RelationInfoRequest {
+    1:  i64 my_id
+    2:  i64 user_id
+}
+
+struct RelationInfoResponse {
+    1:  i32 status_code
+    2:  string status_msg
+    3:  i64 follow_count
+    4:  i64 follower_count
+    5:  bool is_follow
+}
+
 service ApiService{
      UserRegisterResponse Register(1: UserRegisterRequest req) (api.post="/douyin/user/register/")
      UserLoginResponse Login(1: UserLoginRequest req) (api.post="/douyin/user/login/")
@@ -151,4 +186,8 @@ service ApiService{
      FavoriteListResponse GetFavoriteList(1:FavoriteListRequest req)(api.get="/douyin/favorite/list/")
      CommentActionResponse CommentAction(1:CommentActionRequest req)(api.post="/douyin/comment/action/")
      CommentListResponse GetCommentList(1:CommentListRequest req)(api.get="/douyin/comment/list/")
+     RelationActionResponse RelationAction(1:RelationActionRequest req)(api.post="/douyin/relation/action/")
+     RelationListResponse GetFollowList(1:RelationListRequest req)(api.get="/douyin/relation/follow/list/")
+     RelationListResponse GetFollowerList(1:RelationListRequest req)(api.get="/douyin/relation/follower/list/")
+     RelationListResponse GetFriendList(1:RelationListRequest req)(api.get="/douyin/relation/friend/list/")
 }

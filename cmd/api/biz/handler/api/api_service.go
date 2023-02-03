@@ -11,6 +11,7 @@ import (
 	api "github.com/hcdoit/tiktok/cmd/api/biz/model/api"
 	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
 	"github.com/hcdoit/tiktok/kitex_gen/interact"
+	"github.com/hcdoit/tiktok/kitex_gen/social"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/kitex_gen/video"
 	"github.com/hcdoit/tiktok/pkg/errno"
@@ -256,6 +257,102 @@ func GetCommentList(ctx context.Context, c *app.RequestContext) {
 		Token:   req.Token,
 		VideoId: req.VideoID,
 	})
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// RelationAction .
+// @router /douyin/relation/action/ [POST]
+func RelationAction(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.RelationActionRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+
+	resp, err := rpc.RelationAction(ctx, &social.RelationActionRequest{
+		Token:      req.Token,
+		ToUserId:   req.ToUserID,
+		ActionType: req.ActionType,
+	})
+
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetFollowList .
+// @router /douyin/relation/follow/list/ [GET]
+func GetFollowList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.RelationListRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+
+	resp, err := rpc.GetFollowList(ctx, &social.RelationListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetFollowerList .
+// @router /douyin/relation/follower/list/ [GET]
+func GetFollowerList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.RelationListRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+
+	resp, err := rpc.GetFollowerList(ctx, &social.RelationListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetFriendList .
+// @router /douyin/relation/friend/list/ [GET]
+func GetFriendList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.RelationListRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+	resp, err := rpc.GetFriendList(ctx, &social.RelationListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+
 	if err != nil {
 		c.JSON(consts.StatusOK, errno.ServiceErr)
 		return

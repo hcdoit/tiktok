@@ -25,5 +25,5 @@ func (s *GetUserService) GetUser(req *user.GetUserRequest, myID int64) (*user.Us
 	if len(users) != 1 {
 		return nil, errno.ResourceNotFound
 	}
-	return utils.BuildUser(users[0]), nil
+	return utils.BuildUser(users[0], myID, s.ctx), nil
 }

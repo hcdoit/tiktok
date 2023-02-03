@@ -5,10 +5,12 @@ const (
 	VideoServiceName    = "video"
 	InteractServiceName = "interact"
 	UserServiceName     = "user"
+	SocialServiceName   = "social"
 )
 const (
 	TCP                 = "tcp"
-	UserServiceAddr     = ":7777"
-	InteractServiceAddr = ":7778"
-	VideoServiceAddr    = ":7779"
+	UserServiceAddr     = ":7776"
+	InteractServiceAddr = ":7777"
+	VideoServiceAddr    = ":7778"
+	SocialServiceAddr   = ":7779"
 )

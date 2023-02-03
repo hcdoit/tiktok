@@ -3,13 +3,13 @@ package utils
 import (
 	"context"
 	"errors"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/hcdoit/tiktok/cmd/video/dal/db"
 	"github.com/hcdoit/tiktok/cmd/video/rpc"
 	"github.com/hcdoit/tiktok/kitex_gen/interact"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/kitex_gen/video"
 	"github.com/hcdoit/tiktok/pkg/errno"
+	"github.com/hcdoit/tiktok/pkg/jwt"
 )
 
 func BuildStatus(err error) (int32, string) {
@@ -28,9 +28,15 @@ func BuildVideo(v *db.Video, ctx context.Context, myID int64) (*video.Video, err
 	if v == nil {
 		return nil, nil
 	}
+	token, err := jwt.CreateToken(jwt.CustomClaims{
+		Id: int64(myID),
+	})
+	if err != nil {
+		return nil, err
+	}
 	author, err := rpc.GetUser(ctx, &user.GetUserRequest{
 		UserId: v.AuthorID,
-		Token:  "",
+		Token:  token,
 	})
 	if err != nil {
 		return nil, err
@@ -57,7 +63,6 @@ func BuildVideo(v *db.Video, ctx context.Context, myID int64) (*video.Video, err
 func BuildVideos(vs []*db.Video, ctx context.Context, myID int64) []*video.Video {
 	videos := make([]*video.Video, 0)
 	for _, v := range vs {
-		klog.Info(v.AuthorID)
 		if temp, err := BuildVideo(v, ctx, myID); temp != nil && err == nil {
 			videos = append(videos, temp)
 		}
