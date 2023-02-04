@@ -175,6 +175,37 @@ struct RelationInfoResponse {
     5:  bool is_follow
 }
 
+struct Message{
+    1: i64 id
+    2: i64 to_user_id
+    3: i64 from_user_id
+    4: string content
+    5: string create_time
+}
+
+struct MessageChatRequest{
+    1: string token
+    2: i64 to_user_id
+}
+
+struct MessageChatResponse{
+    1:  i32 status_code
+    2:  string status_msg
+    3:  list<Message> message_list
+}
+
+struct MessageActionRequest{
+    1: string token
+    2: i64 to_user_id
+    3: i32 action_type
+    4: string content
+}
+
+struct MessageActionResponse{
+    1:  i32 status_code
+    2:  string status_msg
+}
+
 service ApiService{
      UserRegisterResponse Register(1: UserRegisterRequest req) (api.post="/douyin/user/register/")
      UserLoginResponse Login(1: UserLoginRequest req) (api.post="/douyin/user/login/")
@@ -190,4 +221,6 @@ service ApiService{
      RelationListResponse GetFollowList(1:RelationListRequest req)(api.get="/douyin/relation/follow/list/")
      RelationListResponse GetFollowerList(1:RelationListRequest req)(api.get="/douyin/relation/follower/list/")
      RelationListResponse GetFriendList(1:RelationListRequest req)(api.get="/douyin/relation/friend/list/")
+     MessageChatResponse GetMessageChat(1:MessageChatRequest req)(api.get="/douyin/message/chat/")
+     MessageActionResponse MessageAction(1:MessageActionRequest req)(api.post="/douyin/message/action/")
 }

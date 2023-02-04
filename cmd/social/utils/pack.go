@@ -3,7 +3,9 @@ package utils
 import (
 	"context"
 	"errors"
+	"github.com/hcdoit/tiktok/cmd/social/dal/mdb"
 	"github.com/hcdoit/tiktok/cmd/social/rpc"
+	"github.com/hcdoit/tiktok/kitex_gen/social"
 	"github.com/hcdoit/tiktok/kitex_gen/user"
 	"github.com/hcdoit/tiktok/pkg/errno"
 	"github.com/hcdoit/tiktok/pkg/jwt"
@@ -40,4 +42,27 @@ func BuildUsers(ids []int64, myID int64, ctx context.Context) []*user.User {
 
 	}
 	return users
+}
+
+func BuildMessage(msg *mdb.Message, mid int64) *social.Message {
+	if msg == nil {
+		return nil
+	}
+	return &social.Message{
+		Id:         mid,
+		ToUserId:   msg.ToUserID,
+		FromUserId: msg.FromUserID,
+		Content:    msg.Content,
+		CreateTime: msg.CreateTime.Format("2006-01-02 15:04:05"),
+	}
+}
+
+func BuildMessages(msgs []*mdb.Message) []*social.Message {
+	messages := make([]*social.Message, 0)
+	for i, msg := range msgs {
+		if temp := BuildMessage(msg, int64(i+1)); temp != nil {
+			messages = append(messages, temp)
+		}
+	}
+	return messages
 }

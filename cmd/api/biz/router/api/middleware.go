@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hcdoit/tiktok/cmd/api/biz/mw"
+	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/requestid"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -20,6 +21,8 @@ func rootMw() []app.HandlerFunc {
 				return traceID
 			}),
 		),
+		// use gzip mw
+		gzip.Gzip(gzip.DefaultCompression),
 	}
 	return nil
 }
@@ -228,5 +231,33 @@ func _registerMw() []app.HandlerFunc {
 
 func _register0Mw() []app.HandlerFunc {
 	// your code...
+	return nil
+}
+func _messageMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+func _action3Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+func _message_ctionMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
+	return nil
+}
+
+func _chatMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getmessagechatMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		mw.TokenMiddlewareFunc(),
+	}
 	return nil
 }

@@ -24,6 +24,8 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"GetFollowerList": kitex.NewMethodInfo(getFollowerListHandler, newSocialServiceGetFollowerListArgs, newSocialServiceGetFollowerListResult, false),
 		"GetFriendList":   kitex.NewMethodInfo(getFriendListHandler, newSocialServiceGetFriendListArgs, newSocialServiceGetFriendListResult, false),
 		"GetRelationInfo": kitex.NewMethodInfo(getRelationInfoHandler, newSocialServiceGetRelationInfoArgs, newSocialServiceGetRelationInfoResult, false),
+		"GetMessageChat":  kitex.NewMethodInfo(getMessageChatHandler, newSocialServiceGetMessageChatArgs, newSocialServiceGetMessageChatResult, false),
+		"MessageAction":   kitex.NewMethodInfo(messageActionHandler, newSocialServiceMessageActionArgs, newSocialServiceMessageActionResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "social",
@@ -129,6 +131,42 @@ func newSocialServiceGetRelationInfoResult() interface{} {
 	return social.NewSocialServiceGetRelationInfoResult()
 }
 
+func getMessageChatHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*social.SocialServiceGetMessageChatArgs)
+	realResult := result.(*social.SocialServiceGetMessageChatResult)
+	success, err := handler.(social.SocialService).GetMessageChat(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSocialServiceGetMessageChatArgs() interface{} {
+	return social.NewSocialServiceGetMessageChatArgs()
+}
+
+func newSocialServiceGetMessageChatResult() interface{} {
+	return social.NewSocialServiceGetMessageChatResult()
+}
+
+func messageActionHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*social.SocialServiceMessageActionArgs)
+	realResult := result.(*social.SocialServiceMessageActionResult)
+	success, err := handler.(social.SocialService).MessageAction(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSocialServiceMessageActionArgs() interface{} {
+	return social.NewSocialServiceMessageActionArgs()
+}
+
+func newSocialServiceMessageActionResult() interface{} {
+	return social.NewSocialServiceMessageActionResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -184,6 +222,26 @@ func (p *kClient) GetRelationInfo(ctx context.Context, req *social.RelationInfoR
 	_args.Req = req
 	var _result social.SocialServiceGetRelationInfoResult
 	if err = p.c.Call(ctx, "GetRelationInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetMessageChat(ctx context.Context, req *social.MessageChatRequest) (r *social.MessageChatResponse, err error) {
+	var _args social.SocialServiceGetMessageChatArgs
+	_args.Req = req
+	var _result social.SocialServiceGetMessageChatResult
+	if err = p.c.Call(ctx, "GetMessageChat", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) MessageAction(ctx context.Context, req *social.MessageActionRequest) (r *social.MessageActionResponse, err error) {
+	var _args social.SocialServiceMessageActionArgs
+	_args.Req = req
+	var _result social.SocialServiceMessageActionResult
+	if err = p.c.Call(ctx, "MessageAction", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

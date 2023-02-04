@@ -12,6 +12,55 @@ import (
 // SocialServiceImpl implements the last service interface defined in the IDL.
 type SocialServiceImpl struct{}
 
+func (s *SocialServiceImpl) GetMessageChat(ctx context.Context, req *social.MessageChatRequest) (resp *social.MessageChatResponse, err error) {
+	//TODO implement me
+	resp = new(social.MessageChatResponse)
+	claim, err := jwt.ParseToken(req.Token)
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+
+	messages, err := service.NewMessageService(ctx).GetMessageChat(req, claim.Id)
+
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	resp.MessageList = messages
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
+	return resp, nil
+
+}
+
+func (s *SocialServiceImpl) MessageAction(ctx context.Context, req *social.MessageActionRequest) (resp *social.MessageActionResponse, err error) {
+	//TODO implement me
+	resp = new(social.MessageActionResponse)
+	claim, err := jwt.ParseToken(req.Token)
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+
+	err = service.NewMessageService(ctx).MessageAction(req, claim.Id)
+
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+
+	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
+	return resp, nil
+}
+
 // RelationAction implements the SocialServiceImpl interface.
 func (s *SocialServiceImpl) RelationAction(ctx context.Context, req *social.RelationActionRequest) (resp *social.RelationActionResponse, err error) {
 	// TODO: Your code here...

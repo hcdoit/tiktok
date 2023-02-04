@@ -27,3 +27,22 @@ func (p *RelationInfoRequest) IsValid() error {
 	}
 	return nil
 }
+
+func (p *MessageChatRequest) IsValid() error {
+	if p.ToUserId <= 0 {
+		return fmt.Errorf("field ToUserId rule failed, current value: %d", p.ToUserId)
+	}
+	return nil
+}
+func (p *MessageActionRequest) IsValid() error {
+	if p.ToUserId <= 0 {
+		return fmt.Errorf("field ToUserId rule failed, current value: %d", p.ToUserId)
+	}
+	if p.ActionType != 1 {
+		return fmt.Errorf("field ActionType rule failed, current value: %d", p.ActionType)
+	}
+	if len(p.Content) == 0 {
+		return fmt.Errorf("field Content rule failed, current value: %d", len(p.Content))
+	}
+	return nil
+}

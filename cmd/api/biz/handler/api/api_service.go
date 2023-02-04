@@ -8,7 +8,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	api "github.com/hcdoit/tiktok/cmd/api/biz/model/api"
+	"github.com/hcdoit/tiktok/cmd/api/biz/model/api"
 	"github.com/hcdoit/tiktok/cmd/api/biz/rpc"
 	"github.com/hcdoit/tiktok/kitex_gen/interact"
 	"github.com/hcdoit/tiktok/kitex_gen/social"
@@ -351,6 +351,56 @@ func GetFriendList(ctx context.Context, c *app.RequestContext) {
 	resp, err := rpc.GetFriendList(ctx, &social.RelationListRequest{
 		UserId: req.UserID,
 		Token:  req.Token,
+	})
+
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetMessageChat .
+// @router /douyin/message/chat/ [GET]
+func GetMessageChat(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.MessageChatRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+
+	resp, err := rpc.GetMessageChat(ctx, &social.MessageChatRequest{
+		Token:    req.Token,
+		ToUserId: req.ToUserID,
+	})
+
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ServiceErr)
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// MessageAction .
+// @router /douyin/message/action/ [POST]
+func MessageAction(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.MessageActionRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusOK, errno.ParamErr)
+		return
+	}
+
+	resp, err := rpc.MessageAction(ctx, &social.MessageActionRequest{
+		Token:      req.Token,
+		ToUserId:   req.ToUserID,
+		ActionType: req.ActionType,
+		Content:    req.Content,
 	})
 
 	if err != nil {

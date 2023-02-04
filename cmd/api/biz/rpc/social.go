@@ -57,3 +57,13 @@ func RelationAction(ctx context.Context, req *social.RelationActionRequest) (res
 	resp, err = socialClient.RelationAction(ctx, req)
 	return resp, err
 }
+
+func MessageAction(ctx context.Context, req *social.MessageActionRequest) (resp *social.MessageActionResponse, err error) {
+	resp, err = socialClient.MessageAction(ctx, req)
+	return resp, err
+}
+
+func GetMessageChat(ctx context.Context, req *social.MessageChatRequest) (resp *social.MessageChatResponse, err error) {
+	resp, err = socialClient.GetMessageChat(ctx, req)
+	return resp, err
+}
