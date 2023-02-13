@@ -21,7 +21,7 @@ func initVideo() {
 		panic(err)
 	}
 	provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(consts.VideoServiceAddr),
+		provider.WithServiceName(consts.ApiServiceName),
 		provider.WithExportEndpoint(consts.ExportEndpoint),
 		provider.WithInsecure(),
 	)

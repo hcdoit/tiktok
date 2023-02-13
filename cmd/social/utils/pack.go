@@ -11,6 +11,7 @@ import (
 	"github.com/hcdoit/tiktok/pkg/jwt"
 )
 
+// BuildStatus 将error转换为StatusCode和StatusMsg
 func BuildStatus(err error) (int32, string) {
 	if err == nil {
 		return errno.Success.ErrCode, errno.Success.ErrMsg
@@ -44,6 +45,7 @@ func BuildUsers(ids []int64, myID int64, ctx context.Context) []*user.User {
 	return users
 }
 
+// BuildMessage 打包单个Message
 func BuildMessage(msg *mdb.Message, mid int64) *social.Message {
 	if msg == nil {
 		return nil
@@ -57,6 +59,7 @@ func BuildMessage(msg *mdb.Message, mid int64) *social.Message {
 	}
 }
 
+// BuildMessages 打包Message列表
 func BuildMessages(msgs []*mdb.Message) []*social.Message {
 	messages := make([]*social.Message, 0)
 	for i, msg := range msgs {

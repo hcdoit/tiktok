@@ -11,6 +11,7 @@ import (
 	"github.com/hcdoit/tiktok/pkg/jwt"
 )
 
+// BuildStatus 将error转换为StatusCode和StatusMsg
 func BuildStatus(err error) (int32, string) {
 	if err == nil {
 		return errno.Success.ErrCode, errno.Success.ErrMsg
@@ -23,6 +24,7 @@ func BuildStatus(err error) (int32, string) {
 	return s.ErrCode, s.ErrMsg
 }
 
+// BuildComment 打包单个Comment
 func BuildComment(c *db.Comment, ctx context.Context, myID int64) (*interact.Comment, error) {
 	if c == nil {
 		return nil, nil
@@ -33,6 +35,7 @@ func BuildComment(c *db.Comment, ctx context.Context, myID int64) (*interact.Com
 	if err != nil {
 		return nil, err
 	}
+	// rpc调用得到User
 	user, err := rpc.GetUser(ctx, &user.GetUserRequest{
 		UserId: c.UserID,
 		Token:  token,
@@ -48,6 +51,7 @@ func BuildComment(c *db.Comment, ctx context.Context, myID int64) (*interact.Com
 	}, nil
 }
 
+// BuildComments 打包Comment列表
 func BuildComments(cs []*db.Comment, ctx context.Context, myID int64) []*interact.Comment {
 	comments := make([]*interact.Comment, 0)
 	for _, c := range cs {

@@ -16,6 +16,7 @@ func NewGetUserService(ctx context.Context) *GetUserService {
 	return &GetUserService{ctx: ctx}
 }
 
+// GetUser 获取用户
 func (s *GetUserService) GetUser(req *user.GetUserRequest, myID int64) (*user.User, error) {
 
 	users, err := db.QueryUserByID(s.ctx, req.UserId)

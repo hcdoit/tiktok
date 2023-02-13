@@ -18,6 +18,7 @@ func NewPublishService(ctx context.Context) *PublishService {
 	return &PublishService{ctx: ctx}
 }
 
+// GetPublishList 获取用户上传的所有视频
 func (s *PublishService) GetPublishList(myID int64, ID int64) ([]*video.Video, error) {
 	modelVideos, err := db.QueryVideoByAuthorID(s.ctx, ID)
 	if err != nil {
@@ -28,19 +29,24 @@ func (s *PublishService) GetPublishList(myID int64, ID int64) ([]*video.Video, e
 	}
 	return utils.BuildVideos(modelVideos, s.ctx, myID), nil
 }
+
+// PublishAction 上传视频
 func (s *PublishService) PublishAction(req *video.PublishActionRequest, authorID int64) error {
 
 	publishTime := time.Now().Unix()
 	videoName := fmt.Sprintf("%d_%d.mp4", authorID, publishTime)
+	// 保存视频
 	localURL, url, err := minio.SaveVideo(s.ctx, videoName, req.Data)
 	if err != nil {
 		return err
 	}
+	// 获取封面，顺带检查保存视频的URL是否有效
 	coverData, err := utils.GetCover(localURL)
 	if err != nil {
 		return err
 	}
 	coverName := fmt.Sprintf("%d_%d.jpg", authorID, publishTime)
+	// 保存封面
 	covorURL, err := minio.SaveCover(s.ctx, coverName, coverData)
 	if err != nil {
 		return err

@@ -20,6 +20,7 @@ func NewFavoriteService(ctx context.Context) *FavoriteService {
 	}
 }
 
+// FavoriteAction 点赞或取消赞
 func (s FavoriteService) FavoriteAction(req *interact.FavoriteActionRequest, userID int64) (err error) {
 	if req.ActionType == 1 {
 		err = db.CreateFavorite(s.ctx, []*db.Favorite{
@@ -48,6 +49,8 @@ func (s FavoriteService) FavoriteAction(req *interact.FavoriteActionRequest, use
 
 	return nil
 }
+
+// GetFavoriteList 获取用户所有点赞视频
 func (s FavoriteService) GetFavoriteList(userID int64, myID int64) (videos []*video.Video, err error) {
 	favorites, err := db.QueryFavoriteByUserID(s.ctx, userID)
 	if err != nil {

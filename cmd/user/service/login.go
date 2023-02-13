@@ -23,14 +23,14 @@ func NewLoginService(ctx context.Context) *LoginService {
 	}
 }
 
-// Login check user info
+// Login 检查账号密码返回id和token
 func (s *LoginService) Login(req *user.UserLoginRequest) (int64, string, error) {
+	// 明文密码加密后与数据库比对
 	h := md5.New()
 	if _, err := io.WriteString(h, req.Password); err != nil {
 		return 0, "", err
 	}
 	passWord := fmt.Sprintf("%x", h.Sum(nil))
-
 	userName := req.Username
 	users, err := db.QueryUserByName(s.ctx, userName)
 	if err != nil {
@@ -40,9 +40,11 @@ func (s *LoginService) Login(req *user.UserLoginRequest) (int64, string, error) 
 		return 0, "", errno.AuthInvalidAccount
 	}
 	u := users[0]
+	// 与数据库比较
 	if u.Password != passWord {
 		return 0, "", errno.AuthInvalidAccount
 	}
+	// 创建Token，并存入缓存表示登录
 	token, err := jwt.CreateToken(jwt.CustomClaims{
 		Id: int64(u.ID),
 	})

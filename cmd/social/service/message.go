@@ -18,6 +18,7 @@ func NewMessageService(ctx context.Context) *MessageService {
 	}
 }
 
+// GetMessageChat 获取聊天记录
 func (s *MessageService) GetMessageChat(req *social.MessageChatRequest, myID int64) ([]*social.Message, error) {
 	modelMessages, err := mdb.GetMessages(s.ctx, myID, req.ToUserId)
 	if err != nil {
@@ -26,6 +27,7 @@ func (s *MessageService) GetMessageChat(req *social.MessageChatRequest, myID int
 	return utils.BuildMessages(modelMessages), nil
 }
 
+// MessageAction 发送消息
 func (s *MessageService) MessageAction(req *social.MessageActionRequest, myID int64) error {
 	return mdb.InsertMessage(s.ctx, myID, req.ToUserId, req.Content)
 }

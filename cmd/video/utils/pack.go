@@ -12,6 +12,7 @@ import (
 	"github.com/hcdoit/tiktok/pkg/jwt"
 )
 
+// BuildStatus 将error转换为StatusCode和StatusMsg
 func BuildStatus(err error) (int32, string) {
 	if err == nil {
 		return errno.Success.ErrCode, errno.Success.ErrMsg
@@ -24,6 +25,7 @@ func BuildStatus(err error) (int32, string) {
 	return s.ErrCode, s.ErrMsg
 }
 
+// BuildVideo 打包单个视频
 func BuildVideo(v *db.Video, ctx context.Context, myID int64) (*video.Video, error) {
 	if v == nil {
 		return nil, nil
@@ -60,6 +62,7 @@ func BuildVideo(v *db.Video, ctx context.Context, myID int64) (*video.Video, err
 	}, nil
 }
 
+// BuildVideos 打包视频列表
 func BuildVideos(vs []*db.Video, ctx context.Context, myID int64) []*video.Video {
 	videos := make([]*video.Video, 0)
 	for _, v := range vs {

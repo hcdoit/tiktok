@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// InitCommentCountByVideoID 缓存为空时从数据库读取并更新缓存
 func InitCommentCountByVideoID(ctx context.Context, videoID int64) (count int, err error) {
 	comments, err := db.QueryCommentByVideoID(ctx, videoID)
 	if err != nil {
@@ -22,6 +23,7 @@ func InitCommentCountByVideoID(ctx context.Context, videoID int64) (count int, e
 	return count, nil
 }
 
+// GetCommentCountByVideoID 获取缓存，若无缓存则更新
 func GetCommentCountByVideoID(ctx context.Context, videoID int64) (count int, err error) {
 	key := fmt.Sprintf("video-comment-count:%d", videoID)
 	value, err := RDB.Get(ctx, key).Result()
@@ -43,9 +45,11 @@ func GetCommentCountByVideoID(ctx context.Context, videoID int64) (count int, er
 
 }
 
+// AddCommentCountByVideoID 从已有缓存更新缓存+1
 func AddCommentCountByVideoID(ctx context.Context, videoID int64) (err error) {
 	key := fmt.Sprintf("video-comment-count:%d", videoID)
 	value, err := RDB.Get(ctx, key).Result()
+	// 无缓存则直接从数据库更新缓存
 	if err == redis.Nil {
 		_, err = InitCommentCountByVideoID(ctx, videoID)
 		if err != nil {
@@ -53,21 +57,31 @@ func AddCommentCountByVideoID(ctx context.Context, videoID int64) (err error) {
 		}
 		return nil
 	}
-	count, err := strconv.Atoi(value)
-	if err != nil {
-		return err
+	// 存在缓存
+	if err == nil {
+		// 先删除保证数据一致性
+		RDB.Del(ctx, key)
+		// 更新数据+1
+		count, err := strconv.Atoi(value)
+		if err != nil {
+			return err
+		}
+		count++
+		if count <= 0 {
+			count, err = InitCommentCountByVideoID(ctx, videoID)
+			return err
+		}
+		// 将更新的数据写回缓存
+		return RDB.Set(ctx, fmt.Sprintf("video-comment-count:%d", videoID), count, consts.ForeverExpireDuration).Err()
 	}
-	count++
-	if count <= 0 {
-		count, err = InitCommentCountByVideoID(ctx, videoID)
-		return err
-	}
-	return RDB.Set(ctx, fmt.Sprintf("video-comment-count:%d", videoID), count, consts.ForeverExpireDuration).Err()
+	return err
 }
 
+// MinusCommentCountByVideoID 从已有缓存更新缓存-1
 func MinusCommentCountByVideoID(ctx context.Context, videoID int64) (err error) {
 	key := fmt.Sprintf("video-comment-count:%d", videoID)
 	value, err := RDB.Get(ctx, key).Result()
+	// 无缓存则直接从数据库更新缓存
 	if err == redis.Nil {
 		_, err = InitCommentCountByVideoID(ctx, videoID)
 		if err != nil {
@@ -75,14 +89,22 @@ func MinusCommentCountByVideoID(ctx context.Context, videoID int64) (err error) 
 		}
 		return nil
 	}
-	count, err := strconv.Atoi(value)
-	if err != nil {
-		return err
+	// 存在缓存
+	if err == nil {
+		// 先删除保证数据一致性
+		RDB.Del(ctx, key)
+		// 更新数据-1
+		count, err := strconv.Atoi(value)
+		if err != nil {
+			return err
+		}
+		count--
+		if count < 0 {
+			count, err = InitCommentCountByVideoID(ctx, videoID)
+			return err
+		}
+		// 将更新的数据写回缓存
+		return RDB.Set(ctx, fmt.Sprintf("video-comment-count:%d", videoID), count, consts.ForeverExpireDuration).Err()
 	}
-	count--
-	if count < 0 {
-		count, err = InitCommentCountByVideoID(ctx, videoID)
-		return err
-	}
-	return RDB.Set(ctx, fmt.Sprintf("video-comment-count:%d", videoID), count, consts.ForeverExpireDuration).Err()
+	return err
 }

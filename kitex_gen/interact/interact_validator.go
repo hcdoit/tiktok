@@ -2,6 +2,7 @@ package interact
 
 import "fmt"
 
+// IsValid 校验VideoId，ActionType
 func (p *FavoriteActionRequest) IsValid() error {
 	if p.VideoId < 0 {
 		return fmt.Errorf("field VideoId rule failed, current value: %d", p.VideoId)
@@ -12,6 +13,7 @@ func (p *FavoriteActionRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验UserId
 func (p *FavoriteListRequest) IsValid() error {
 	if p.UserId <= 0 {
 		return fmt.Errorf("field UserId rule failed, current value: %d", p.UserId)
@@ -19,6 +21,7 @@ func (p *FavoriteListRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验VideoId，ActionType
 func (p *CommentActionRequest) IsValid() error {
 	if p.VideoId <= 0 {
 		return fmt.Errorf("field VideoId rule failed, current value: %d", p.VideoId)
@@ -38,6 +41,7 @@ func (p *CommentActionRequest) IsValid() error {
 	return fmt.Errorf("field ActionType rule failed, current value: %d", p.ActionType)
 }
 
+// IsValid 校验VideoId
 func (p *CommentListRequest) IsValid() error {
 	if p.VideoId <= 0 {
 		return fmt.Errorf("field VideoId rule failed, current value: %d", p.VideoId)
@@ -45,6 +49,7 @@ func (p *CommentListRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验UserId，VideoId
 func (p *VideoInteractRequest) IsValid() error {
 	if p.UserId < 0 {
 		return fmt.Errorf("field UserId rule failed, current value: %d", p.UserId)

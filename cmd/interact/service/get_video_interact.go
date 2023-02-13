@@ -17,6 +17,7 @@ func NewGetVideoInteractService(ctx context.Context) *GetVideoInteractService {
 	}
 }
 
+// GetVideoInteract 获取视频的点赞数、评论数
 func (s *GetVideoInteractService) GetVideoInteract(req *interact.VideoInteractRequest) (favoriteCount int, commentCount int, isFavorite bool, err error) {
 	favoriteCount, err = rdb.GetFavoriteCountByVideoID(s.ctx, req.VideoId)
 	if err != nil {

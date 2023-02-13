@@ -15,6 +15,7 @@ func NewGetFeedService(ctx context.Context) *GetFeedService {
 	return &GetFeedService{ctx: ctx}
 }
 
+// GetFeed 获取视频流
 func (s *GetFeedService) GetFeed(id int64, time int64) (videos []*video.Video, nextTime int64, err error) {
 	modelVideos, err := db.QueryVideBeforeTime(s.ctx, time)
 	if err != nil {

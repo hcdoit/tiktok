@@ -18,6 +18,7 @@ func NewRegisterService(ctx context.Context) *RegisterService {
 	return &RegisterService{ctx: ctx}
 }
 
+// Register 注册
 func (s *RegisterService) Register(req *user.UserRegisterRequest) error {
 	users, err := db.QueryUserByName(s.ctx, req.Username)
 	if err != nil {
@@ -27,6 +28,7 @@ func (s *RegisterService) Register(req *user.UserRegisterRequest) error {
 	if len(users) != 0 {
 		return errno.UserAlreadyExistErr
 	}
+	// 密码采用加密形式保存
 	h := md5.New()
 	if _, err = io.WriteString(h, req.Password); err != nil {
 		return err

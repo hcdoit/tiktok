@@ -19,6 +19,7 @@ func NewRelationService(ctx context.Context) *RelationService {
 	}
 }
 
+// RelationAction 关注或取关
 func (s *RelationService) RelationAction(req *social.RelationActionRequest, myID int64) error {
 	if req.ToUserId == myID {
 		return nil
@@ -37,6 +38,7 @@ const (
 	Follower
 )
 
+// RelationList 获取不同关系的用户列表
 func (s *RelationService) RelationList(req *social.RelationListRequest, myID int64, method Method) ([]*user.User, error) {
 	if method == Follower {
 		ids, err := rdb.GetFollowerList(s.ctx, req.UserId)
@@ -62,6 +64,7 @@ func (s *RelationService) RelationList(req *social.RelationListRequest, myID int
 	return nil, nil
 }
 
+// GetRelationInfo 获取用户的关系信息
 func (s *RelationService) GetRelationInfo(req *social.RelationInfoRequest) (followCount int64, followerCount int64, isFollow bool, err error) {
 	followCount, err = rdb.GetFollowCount(s.ctx, req.UserId)
 	if err != nil {

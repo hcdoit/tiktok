@@ -19,6 +19,7 @@ var (
 	_ = time.Nanosecond
 )
 
+// IsValid 校验Username，Password
 func (p *UserRegisterRequest) IsValid() error {
 	if len(p.Username) < int(1) || len(p.Username) > int(32) {
 		return fmt.Errorf("field Username len rule failed, current value: %d", len(p.Username))
@@ -29,6 +30,7 @@ func (p *UserRegisterRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验Username，Password
 func (p *UserLoginRequest) IsValid() error {
 	if len(p.Username) < int(1) || len(p.Username) > int(32) {
 		return fmt.Errorf("field Username len rule failed, current value: %d", len(p.Username))
@@ -39,6 +41,7 @@ func (p *UserLoginRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验UserId
 func (p *GetUserRequest) IsValid() error {
 	if p.UserId < 0 {
 		return fmt.Errorf("field UserId rule failed, current value: %d", p.UserId)

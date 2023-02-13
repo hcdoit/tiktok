@@ -16,6 +16,7 @@ func NewGetVideoService(ctx context.Context) *GetVideoService {
 	return &GetVideoService{ctx: ctx}
 }
 
+// GetVideo 通过videoID获取单个视频
 func (s *GetVideoService) GetVideo(req *video.VideoRequest) (*video.Video, error) {
 
 	videos, err := db.QueryVideoByID(s.ctx, req.VideoId)

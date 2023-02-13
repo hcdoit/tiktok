@@ -9,6 +9,7 @@ import (
 	"os"
 )
 
+// GetCover 获取封面，需要ffmpeg环境
 func GetCover(filePath string) ([]byte, error) {
 	reader := bytes.NewBuffer(nil)
 	err := ffmpeg.Input(filePath).

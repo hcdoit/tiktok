@@ -14,25 +14,29 @@ type UserServiceImpl struct{}
 
 // Register implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UserRegisterResponse, err error) {
-	// TODO: Your code here...
 	resp = new(user.UserRegisterResponse)
-	//判断参数长度
+
+	// 校验参数
 	if err = req.IsValid(); err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, err
 	}
-	//注册用户
+
+	// 调用service层
 	err = service.NewRegisterService(ctx).Register(req)
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
-	//注册后登录获得uid
+
+	// 注册后登录获取Token
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
+
+	//包装正常响应
 	resp.UserId = uid
 	resp.Token = token
 	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
@@ -42,19 +46,22 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 
 // Login implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest) (resp *user.UserLoginResponse, err error) {
-	// TODO: Your code here...
 	resp = new(user.UserLoginResponse)
-	//判断参数长度
+
+	// 校验参数
 	if err = req.IsValid(); err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
-	//登录
+
+	// 调用service层
 	uid, token, err := service.NewLoginService(ctx).Login(&user.UserLoginRequest{Username: req.Username, Password: req.Password})
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
+
+	// 包装正常响应
 	resp.UserId = uid
 	resp.Token = token
 	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
@@ -63,8 +70,15 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 
 // GetUser implements the UserServiceImpl interface.
 func (s *UserServiceImpl) GetUser(ctx context.Context, req *user.GetUserRequest) (resp *user.GetUserResponse, err error) {
-	// TODO: Your code here...
 	resp = new(user.GetUserResponse)
+
+	// 校验参数
+	if err = req.IsValid(); err != nil {
+		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
+		return resp, nil
+	}
+
+	// 解析Token获取id，若空默认为0
 	myID := int64(0)
 	if len(req.Token) != 0 {
 		claim, err := jwt.ParseToken(req.Token)
@@ -75,15 +89,14 @@ func (s *UserServiceImpl) GetUser(ctx context.Context, req *user.GetUserRequest)
 		myID = claim.Id
 	}
 
-	if err = req.IsValid(); err != nil {
-		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
-		return resp, nil
-	}
+	// 调用service层
 	user, err := service.NewGetUserService(ctx).GetUser(req, myID)
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
 		return resp, nil
 	}
+
+	// 包装正常响应
 	resp.StatusCode, resp.StatusMsg = utils.BuildStatus(errno.Success)
 	resp.User = user
 

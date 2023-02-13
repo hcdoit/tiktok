@@ -2,6 +2,7 @@ package social
 
 import "fmt"
 
+// IsValid 校验ToUserId，ActionType
 func (p *RelationActionRequest) IsValid() error {
 	if p.ToUserId <= 0 {
 		return fmt.Errorf("field ToUserId rule failed, current value: %d", p.ToUserId)
@@ -18,6 +19,7 @@ func (p *RelationListRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验UserId，MyId
 func (p *RelationInfoRequest) IsValid() error {
 	if p.UserId <= 0 {
 		return fmt.Errorf("field UserId rule failed, current value: %d", p.UserId)
@@ -28,12 +30,15 @@ func (p *RelationInfoRequest) IsValid() error {
 	return nil
 }
 
+// IsValid 校验ToUserId
 func (p *MessageChatRequest) IsValid() error {
 	if p.ToUserId <= 0 {
 		return fmt.Errorf("field ToUserId rule failed, current value: %d", p.ToUserId)
 	}
 	return nil
 }
+
+// IsValid 校验ToUserId，ActionType，Content
 func (p *MessageActionRequest) IsValid() error {
 	if p.ToUserId <= 0 {
 		return fmt.Errorf("field ToUserId rule failed, current value: %d", p.ToUserId)

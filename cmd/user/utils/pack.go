@@ -10,6 +10,7 @@ import (
 	"github.com/hcdoit/tiktok/pkg/errno"
 )
 
+// BuildStatus 将error转换为StatusCode和StatusMsg
 func BuildStatus(err error) (int32, string) {
 	if err == nil {
 		return errno.Success.ErrCode, errno.Success.ErrMsg
@@ -22,7 +23,7 @@ func BuildStatus(err error) (int32, string) {
 	return s.ErrCode, s.ErrMsg
 }
 
-// User pack user info
+// BuildUser pack user info
 func BuildUser(u *db.User, myID int64, ctx context.Context) *user.User {
 	buildUser := &user.User{Id: int64(u.ID), Name: u.Username}
 	relationInfo, err := rpc.GetRelationInfo(ctx, &social.RelationInfoRequest{
