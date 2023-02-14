@@ -2,7 +2,7 @@ package consts
 
 const (
 	MinioEndpoint        = "localhost:9000"
-	MinioAccessURL       = "192.168.0.127:9000"
+	MinioAccessURL       = "192.168.246.19:9000"
 	MinioLocalAccessURL  = "localhost:9000"
 	MinioAccessKeyId     = "tiktokMinio"
 	MinioSecretAccessKey = "tiktokMinio"

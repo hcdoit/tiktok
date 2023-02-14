@@ -1673,7 +1673,7 @@ type Message struct {
 	ToUserId   int64  `thrift:"to_user_id,2" frugal:"2,default,i64" json:"to_user_id"`
 	FromUserId int64  `thrift:"from_user_id,3" frugal:"3,default,i64" json:"from_user_id"`
 	Content    string `thrift:"content,4" frugal:"4,default,string" json:"content"`
-	CreateTime string `thrift:"create_time,5" frugal:"5,default,string" json:"create_time"`
+	CreateTime int64  `thrift:"create_time,5" frugal:"5,default,i64" json:"create_time"`
 }
 
 func NewMessage() *Message {
@@ -1700,7 +1700,7 @@ func (p *Message) GetContent() (v string) {
 	return p.Content
 }
 
-func (p *Message) GetCreateTime() (v string) {
+func (p *Message) GetCreateTime() (v int64) {
 	return p.CreateTime
 }
 func (p *Message) SetId(val int64) {
@@ -1715,7 +1715,7 @@ func (p *Message) SetFromUserId(val int64) {
 func (p *Message) SetContent(val string) {
 	p.Content = val
 }
-func (p *Message) SetCreateTime(val string) {
+func (p *Message) SetCreateTime(val int64) {
 	p.CreateTime = val
 }
 
@@ -1787,7 +1787,7 @@ func (p *Message) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 5:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1863,7 +1863,7 @@ func (p *Message) ReadField4(iprot thrift.TProtocol) error {
 }
 
 func (p *Message) ReadField5(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.CreateTime = v
@@ -1985,10 +1985,10 @@ WriteFieldEndError:
 }
 
 func (p *Message) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("create_time", thrift.STRING, 5); err != nil {
+	if err = oprot.WriteFieldBegin("create_time", thrift.I64, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.CreateTime); err != nil {
+	if err := oprot.WriteI64(p.CreateTime); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2060,9 +2060,9 @@ func (p *Message) Field4DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *Message) Field5DeepEqual(src string) bool {
+func (p *Message) Field5DeepEqual(src int64) bool {
 
-	if strings.Compare(p.CreateTime, src) != 0 {
+	if p.CreateTime != src {
 		return false
 	}
 	return true

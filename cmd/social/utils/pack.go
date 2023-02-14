@@ -55,7 +55,7 @@ func BuildMessage(msg *mdb.Message, mid int64) *social.Message {
 		ToUserId:   msg.ToUserID,
 		FromUserId: msg.FromUserID,
 		Content:    msg.Content,
-		CreateTime: msg.CreateTime.Format("2006-01-02 15:04:05"),
+		CreateTime: msg.CreateTime.Unix(),
 	}
 }
 
@@ -63,9 +63,11 @@ func BuildMessage(msg *mdb.Message, mid int64) *social.Message {
 func BuildMessages(msgs []*mdb.Message) []*social.Message {
 	messages := make([]*social.Message, 0)
 	for i, msg := range msgs {
-		if temp := BuildMessage(msg, int64(i+1)); temp != nil {
+		temp := BuildMessage(msg, int64(i+1))
+		if temp != nil {
 			messages = append(messages, temp)
 		}
 	}
+
 	return messages
 }

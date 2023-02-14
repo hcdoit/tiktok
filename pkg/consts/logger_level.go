@@ -6,6 +6,6 @@ import (
 )
 
 const (
-	HLoggerLevel = hlog.LevelDebug
-	KLoggerLevel = klog.LevelDebug
+	HLoggerLevel = hlog.LevelError
+	KLoggerLevel = klog.LevelError
 )
