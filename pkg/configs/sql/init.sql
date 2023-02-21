@@ -52,6 +52,6 @@ CREATE TABLE `favorite`
     `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Favorite update time',
     `deleted_at` timestamp NULL DEFAULT NULL COMMENT 'Favorite delete time',
     PRIMARY KEY (`id`),
-    KEY          `idx_user_id` (`user_id`) COMMENT 'user_id index',
+    UNIQUE KEY   `idx_user_video` (`user_id`,`video_id`) COMMENT 'user_video unique index',
     KEY          `idx_video_id` (`video_id`) COMMENT 'video_id index'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Favorite table';

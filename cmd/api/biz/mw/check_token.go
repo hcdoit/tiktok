@@ -58,6 +58,7 @@ func TokenMiddlewareFunc() app.HandlerFunc {
 			hlog.Debug("no token in request")
 			c.JSON(hzconsts.StatusOK, errno.AuthInvalidJwt)
 			c.Abort()
+			return
 		}
 
 		ok, err := CheckToken(ctx, token)
@@ -67,6 +68,7 @@ func TokenMiddlewareFunc() app.HandlerFunc {
 			}
 			c.JSON(hzconsts.StatusOK, errno.AuthInvalidJwt)
 			c.Abort()
+			return
 		}
 		c.Next(ctx)
 	}

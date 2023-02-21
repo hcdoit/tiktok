@@ -21,7 +21,7 @@ func CreateFavorite(ctx context.Context, favorite []*Favorite) error {
 }
 
 func CancelFavorite(ctx context.Context, userID int64, videoID int64) error {
-	return DB.WithContext(ctx).Where("user_id = ? and video_id =?", userID, videoID).Delete(&Comment{}).Error
+	return DB.WithContext(ctx).Where("user_id = ? and video_id =?", userID, videoID).Unscoped().Delete(&Comment{}).Error
 }
 
 func QueryFavoriteByUserIDAndVideoID(ctx context.Context, userID int64, videoID int64) ([]*Favorite, error) {

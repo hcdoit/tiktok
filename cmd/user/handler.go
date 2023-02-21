@@ -19,7 +19,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 	// 校验参数
 	if err = req.IsValid(); err != nil {
 		resp.StatusCode, resp.StatusMsg = utils.BuildStatus(err)
-		return resp, err
+		return resp, nil
 	}
 
 	// 调用service层
